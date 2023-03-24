@@ -3,22 +3,24 @@
 #include <math.h>
 #include <string.h>
 
+#include <iostream>
+
 #include "activations.h"
 #include "kernels.h"
 #include "display.h"
 
 #define INVALID_ARGS -2
 
-#define SWAP_PTR(a, b) {float **temp = b; b = a; a = temp;}
+#define SWAP_PTR(a, b) {float *temp = b; b = a; a = temp;}
 
 
-void print2D(float **array, int height, int width)
+void print2D(float *array, int height, int width)
 {
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
         {
-            printf("%.1f ", array[y][x]);
+            printf("%.1f ", array[y * width + x]);
         }
         printf("\n");
     }
@@ -47,7 +49,7 @@ void free2D(float **array, int height)
     delete[] array;
 }
 
-void convolution(float **src, float **dest, int height, int width, float **kernel, int size, activation_func f)
+void convolution(float *src, float *dest, int height, int width, float *kernel, int size, activation_func f)
 {
     int relative_y = 0;
     int relative_x = 0;
@@ -81,13 +83,13 @@ void convolution(float **src, float **dest, int height, int width, float **kerne
                     if (array_x < 0 || array_x >= width)
                         continue; // add nothing
 
-                    sum += src[array_y][array_x] * kernel[y][x];
+                    sum += src[array_y * width + array_x] * kernel[y * size + x];
                 }
 
                 // printf("\n");
             }
             
-            dest[row][col] = f(sum);
+            dest[row * width + col] = f(sum);
             sum = 0.0f;
         }
     }
@@ -108,8 +110,8 @@ int main(int argc, char** argv)
 
     // VARIABLES
 
-    int HEIGHT = 10;
-    int WIDTH = 10;
+    int HEIGHT = 100;
+    int WIDTH = 100;
 
     int KERNEL_SIZE = 3;
 
@@ -129,38 +131,59 @@ int main(int argc, char** argv)
         return INVALID_ARGS;
     }
 
-    printf("Cellular Automata: %ux%u\n", HEIGHT, WIDTH);
+    printf("Cellular Automata: %ux%u\n\n", HEIGHT, WIDTH);
 
+    float *current = new float[HEIGHT * WIDTH]();
+    float *next = new float[HEIGHT * WIDTH]();
 
-    float **current = init2D(HEIGHT, WIDTH);
-    float **next = init2D(HEIGHT, WIDTH);
+    float *kernel = new float[9] {
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f
+    };
 
+    current[1 * WIDTH + 1] = 1.0f;
 
-    // float **kernel = init2D(KERNEL_SIZE, KERNEL_SIZE, 1.0f);
-    float **kernel = Kernel::life(&KERNEL_SIZE);
+    // current[4][3] = 1.0f;
+    // current[4][4] = 1.0f;
+    // current[4][5] = 1.0f;
+    // current[5][4] = 1.0f;
 
-    current[4][3] = 1.0f;
-    current[4][4] = 1.0f;
-    current[4][5] = 1.0f;
-    current[5][4] = 1.0f;
+    Display display = Display(100, 100);
+    display.start();
 
     // MAIN PART
 
-    for (int i = 0; i < ITERATIONS; i++)
+    // printf("Initial\n");
+    // print2D(current, HEIGHT, WIDTH);
+    // printf("\n\n");
+
+    // for (int i = 0; i < ITERATIONS; i++)
+    while(display.running)
     {
-        print2D(current, HEIGHT, WIDTH);
-        printf("\n");
+        // convolution(current, next, HEIGHT, WIDTH, kernel, KERNEL_SIZE, Activation::clip);
 
-        convolution(current, next, HEIGHT, WIDTH, kernel, KERNEL_SIZE, Activation::life);
+        // SWAP_PTR(current, next);
 
-        SWAP_PTR(current, next);
+        // printf("%u. gen\n", i+1);
+        // print2D(current, HEIGHT, WIDTH);
+        // printf("\n");
+
+        // display.draw(&current);
+
+        // std::cin.get();
+        // std::system("pause");
     }
 
     // CLEAN UP
 
-    free2D(kernel, KERNEL_SIZE);
-    free2D(current, HEIGHT);
-    free2D(next, HEIGHT);
+    // free2D(kernel, KERNEL_SIZE);
+    // free2D(current, HEIGHT);
+    // free2D(next, HEIGHT);
+
+    delete[] current;
+    delete[] next;
+    delete[] kernel;
 
     return 0;
 }

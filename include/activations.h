@@ -8,7 +8,13 @@ namespace Activation
 {
     float identity(float x);
 
+    float binary(float x);
+
+    float clip(float x);
+
     float sigmoid(float x);
 
     float life(float x);
+
+    float linear_3(float x);
 }
