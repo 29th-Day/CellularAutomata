@@ -3,8 +3,6 @@
 #include <math.h>
 #include <string.h>
 
-#include <iostream>
-
 #include "activations.h"
 #include "kernels.h"
 #include "display.h"
@@ -24,29 +22,7 @@ void print2D(float *array, int height, int width)
         }
         printf("\n");
     }
-}
-
-float **init2D(int height, int width, float value = NULL)
-{
-    float **array = new float*[height];
-    for (int y = 0; y < height; y++)
-    {
-        array[y] = new float[width]();
-
-        if (value != NULL)
-        {
-            for (int x = 0; x < width; x++)
-                array[y][x] = value;
-        }
-    }
-    return array;
-}
-
-void free2D(float **array, int height)
-{
-    for (int y = 0; y < height; y++)
-        delete[] array[y];
-    delete[] array;
+    printf("\n");
 }
 
 void convolution(float *src, float *dest, int height, int width, float *kernel, int size, activation_func f)
@@ -95,34 +71,63 @@ void convolution(float *src, float *dest, int height, int width, float *kernel, 
     }
 }
 
+/*
+int main(int argc, char *argv[])
+{
+    float *data = new float[100 * 100]();
+
+    // print2D(data, 20, 10);
+
+    // data[101] = 1.0f;
+
+    Display display = Display(100, 100, 1);
+
+    int i = 0;
+
+    while (display.run())
+    {
+        if (i < 100*100)
+        {
+            data[i] = 1.0f;
+            printf("%u\n", i);
+            i++;
+        }
+
+        display.draw(data);
+    }
+    
+    delete[] data;
+
+    return 0;
+}
+*/
+
+
 int main(int argc, char** argv)
 {
-
-    // Display display = Display(100, 100);
-
-    // while (!display.close)
-    // {
-    //     display.draw();
-    // }
-    
-    // exit(0);
-
-
     // VARIABLES
 
-    int HEIGHT = 100;
-    int WIDTH = 100;
+    int HEIGHT      = 100;
+    int WIDTH       = 100;
+    int SCALE       = 1;
+    int FPS         = 10;
+    // int ITERATIONS  = 5;
 
     int KERNEL_SIZE = 3;
 
-    int ITERATIONS = 5;
-
     // SETUP
 
-    if (argc == 3)
+    for(int i = 1; i < argc; i+=2)
     {
-        HEIGHT = atoi(argv[1]);
-        WIDTH = atoi(argv[2]);
+        if(strcmp(argv[i], "-h") == 0)
+            HEIGHT = atoi(argv[i+1]);
+        else if (strcmp(argv[i], "-w") == 0)
+            WIDTH = atoi(argv[i+1]);
+        else if (strcmp(argv[i], "-s") == 0)
+            SCALE = atoi(argv[i+1]);
+        else if (strcmp(argv[i], "-fps") == 0)
+            FPS = atoi(argv[i+1]);
+            
     }
 
     if (HEIGHT < 1 || WIDTH < 1)
@@ -131,55 +136,37 @@ int main(int argc, char** argv)
         return INVALID_ARGS;
     }
 
-    printf("Cellular Automata: %ux%u\n\n", HEIGHT, WIDTH);
+    // printf("Cellular Automata: %ux%u\n\n", HEIGHT, WIDTH);
 
     float *current = new float[HEIGHT * WIDTH]();
     float *next = new float[HEIGHT * WIDTH]();
 
-    float *kernel = new float[9] {
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f
-    };
+    current[49 * WIDTH + 49] = 0.1f;
 
-    current[1 * WIDTH + 1] = 1.0f;
+    float *kernel = nullptr;
+    
+    KERNEL_SIZE = Kernel::half(&kernel);
+    // kernel = new float[KERNEL_SIZE * KERNEL_SIZE] {
+    //     1.0f, 1.0f, 1.0f,
+    //     1.0f, 0.5f, 1.0f,
+    //     1.0f, 1.0f, 1.0f
+    // };
 
-    // current[4][3] = 1.0f;
-    // current[4][4] = 1.0f;
-    // current[4][5] = 1.0f;
-    // current[5][4] = 1.0f;
-
-    Display display = Display(100, 100);
-    display.start();
+    Display display = Display(HEIGHT, WIDTH, SCALE, FPS);
 
     // MAIN PART
 
-    // printf("Initial\n");
-    // print2D(current, HEIGHT, WIDTH);
-    // printf("\n\n");
-
-    // for (int i = 0; i < ITERATIONS; i++)
-    while(display.running)
+    while(display.run())
     {
-        // convolution(current, next, HEIGHT, WIDTH, kernel, KERNEL_SIZE, Activation::clip);
+        convolution(current, next, HEIGHT, WIDTH,
+            kernel, KERNEL_SIZE, Activation::clip);
 
-        // SWAP_PTR(current, next);
+        SWAP_PTR(current, next);
 
-        // printf("%u. gen\n", i+1);
-        // print2D(current, HEIGHT, WIDTH);
-        // printf("\n");
-
-        // display.draw(&current);
-
-        // std::cin.get();
-        // std::system("pause");
+        display.draw(current);
     }
 
     // CLEAN UP
-
-    // free2D(kernel, KERNEL_SIZE);
-    // free2D(current, HEIGHT);
-    // free2D(next, HEIGHT);
 
     delete[] current;
     delete[] next;

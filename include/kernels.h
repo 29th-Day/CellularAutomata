@@ -2,5 +2,7 @@
 
 namespace Kernel
 {
-    float **life(int* KERNEL_SIZE);
+    int life(float** kernel);
+
+    int half(float **kernel);
 }

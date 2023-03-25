@@ -1,30 +1,28 @@
 #pragma once
 
 #include <SDL.h>
-#include <thread>
 
 class Display
 {
     public:
-        Display(int height, int width);
+        Display(int height, int width, int scale = 1, int fps = 10);
         ~Display();
 
-        void start();
-        void stop();
+        void draw(float *data);
+        bool run();
 
-        void draw(float **data);
-
-        volatile bool running;
+        bool running;
 
     private:
-        void run();
-
         void handleEvents();
+        void wait();
 
         SDL_Window *_window;
         SDL_Renderer *_renderer;
         SDL_Texture *_texture;
 
+        int _fps;
         int _height;
         int _width;
+        int _scale;
 };
