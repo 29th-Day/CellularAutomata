@@ -5,6 +5,7 @@
 
 #include "activations.h"
 #include "kernels.h"
+#include "states.h"
 #include "display.h"
 
 #define INVALID_ARGS -2
@@ -25,7 +26,7 @@ void print2D(float *array, int height, int width)
     printf("\n");
 }
 
-void convolution(float *src, float *dest, int height, int width, float *kernel, int size, activation_func f)
+void convolution(float src[], float dest[], int height, int width, float kernel[], int size, activation_func f)
 {
     int relative_y = 0;
     int relative_x = 0;
@@ -71,37 +72,6 @@ void convolution(float *src, float *dest, int height, int width, float *kernel, 
     }
 }
 
-/*
-int main(int argc, char *argv[])
-{
-    float *data = new float[100 * 100]();
-
-    // print2D(data, 20, 10);
-
-    // data[101] = 1.0f;
-
-    Display display = Display(100, 100, 1);
-
-    int i = 0;
-
-    while (display.run())
-    {
-        if (i < 100*100)
-        {
-            data[i] = 1.0f;
-            printf("%u\n", i);
-            i++;
-        }
-
-        display.draw(data);
-    }
-    
-    delete[] data;
-
-    return 0;
-}
-*/
-
 
 int main(int argc, char** argv)
 {
@@ -127,6 +97,8 @@ int main(int argc, char** argv)
             SCALE = atoi(argv[i+1]);
         else if (strcmp(argv[i], "-fps") == 0)
             FPS = atoi(argv[i+1]);
+        else if (strcmp(argv[i], "-seed") == 0)
+            srand((unsigned int)*argv[i+1]);
             
     }
 
@@ -136,30 +108,32 @@ int main(int argc, char** argv)
         return INVALID_ARGS;
     }
 
-    // printf("Cellular Automata: %ux%u\n\n", HEIGHT, WIDTH);
-
+    // state
     float *current = new float[HEIGHT * WIDTH]();
     float *next = new float[HEIGHT * WIDTH]();
 
-    current[49 * WIDTH + 49] = 0.1f;
+    State::randb(current, HEIGHT, WIDTH);
+
+    // current[49 * WIDTH + 48] = 1.0f;
+    // current[49 * WIDTH + 49] = 1.0f;
+    // current[49 * WIDTH + 50] = 1.0f;
+    // current[50 * WIDTH + 49] = 1.0f;
+
 
     float *kernel = nullptr;
     
-    KERNEL_SIZE = Kernel::half(&kernel);
-    // kernel = new float[KERNEL_SIZE * KERNEL_SIZE] {
-    //     1.0f, 1.0f, 1.0f,
-    //     1.0f, 0.5f, 1.0f,
-    //     1.0f, 1.0f, 1.0f
-    // };
+    // KERNEL_SIZE = Kernel::half(&kernel);
+    KERNEL_SIZE = Kernel::life(&kernel);
 
     Display display = Display(HEIGHT, WIDTH, SCALE, FPS);
 
     // MAIN PART
 
+    display.draw(current);
     while(display.run())
     {
         convolution(current, next, HEIGHT, WIDTH,
-            kernel, KERNEL_SIZE, Activation::clip);
+            kernel, KERNEL_SIZE, Activation::life);
 
         SWAP_PTR(current, next);
 
