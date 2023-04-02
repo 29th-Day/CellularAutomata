@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#define random() (float)rand()/(float)(RAND_MAX)
+
 void State::randb(float current[], int height, int width)
 {
     for (int i = 0; i < height * width; i++)
@@ -15,6 +17,9 @@ void State::randf(float current[], int height, int width)
 {
     for (int i = 0; i < height * width; i++)
     {
-        current[i] = (float)rand()/(float)(RAND_MAX);
+        if (random() > 0.8)
+        {
+            current[i] = random();
+        }
     }
 }

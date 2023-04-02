@@ -11,6 +11,9 @@ Display::Display(int height, int width, int scale, int fps)
     _scale = scale;
     _fps = fps;
 
+    _frameStart = 0;
+    _frameDelta = 0;
+
     running = true;
 
     char title[100];
@@ -49,7 +52,9 @@ bool Display::run()
 {
     handleEvents();
 
-    SDL_Delay(1000 / _fps);
+    _frameDelta = SDL_GetTicks() - _frameStart;
+    SDL_Delay(__max(0, (1000 / _fps) - _frameDelta));
+    _frameStart = SDL_GetTicks();
 
     if (running)
         return true;

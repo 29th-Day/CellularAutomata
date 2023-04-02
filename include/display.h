@@ -25,4 +25,7 @@ class Display
         int _height;
         int _width;
         int _scale;
+
+        unsigned long _frameStart;
+        unsigned long _frameDelta;
 };
