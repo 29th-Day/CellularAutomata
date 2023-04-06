@@ -1,5 +1,14 @@
 #include "kernels.h"
 
+#include <stdlib.h>
+
+// #define random() {}
+
+inline float random()
+{
+    return ((rand() % 2) ? 1 : -1) * (float)rand()/(float)(RAND_MAX);
+}
+
 int Kernel::life(float** kernel)
 {
     *kernel = new float[3 * 3] {
@@ -20,12 +29,12 @@ int Kernel::half(float** kernel)
     return 3;
 }
 
-int Kernel::test(float** kernel)
+int Kernel::rand(float** kernel)
 {
     *kernel = new float[3 * 3] {
-        0.1f, 0.1f, 0.1f,
-        0.1f, -1.0f, 0.1f,
-        0.1f, 0.1f, 0.1f
+        random(), random(), random(),
+        random(), random(), random(),
+        random(), random(), random()
     };
     return 3;
 }

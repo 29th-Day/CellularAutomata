@@ -10,9 +10,7 @@ class Display
 
         void draw(float *data);
         bool run();
-
-        bool running;
-
+        bool nextFrame();
     private:
         void handleEvents();
         void wait();
@@ -26,6 +24,7 @@ class Display
         int _width;
         int _scale;
 
+        bool _running;
         unsigned long _frameStart;
         unsigned long _frameDelta;
 };

@@ -2,7 +2,10 @@
 
 #include <stdlib.h>
 
-#define random() (float)rand()/(float)(RAND_MAX)
+inline float random()
+{
+    return (float)rand()/(float)(RAND_MAX);
+}
 
 void State::randb(float current[], int height, int width)
 {

@@ -13,15 +13,14 @@ Display::Display(int height, int width, int scale, int fps)
 
     _frameStart = 0;
     _frameDelta = 0;
-
-    running = true;
+    _running = true;
 
     char title[100];
     sprintf_s(title, "CellularAutomata (%ux%u)", _width, _height);
 
     _window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width * _scale, _height * _scale, SDL_WINDOW_SHOWN);
     _renderer = SDL_CreateRenderer(_window, -1, 0);
-    _texture = SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, _width, _height);
+    _texture = SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, _width, _height);
 }
 
 Display::~Display()
@@ -33,14 +32,21 @@ Display::~Display()
 
 void Display::draw(float *data)
 {
-    unsigned char *pixels = NULL;
+    unsigned int *pixels = NULL;
     int pitch = NULL;
 
     SDL_LockTexture(_texture, NULL, (void**)&pixels, &pitch);
 
+    // printf("pitch: %u\n", pitch);
+
     for (int i = 0; i < _height * _width; i++)
     {
-        pixels[i] = (unsigned char)(data[i] * 0xFF);
+        unsigned char value = (unsigned char)data[i] * 0xFF;
+        int rgba = (value << 24) | (value << 16) | (value << 8) | 0xFF;
+
+        // printf("%x\n", rgba);
+
+        pixels[i] = rgba;
     }
 
     SDL_UnlockTexture(_texture);
@@ -52,13 +58,19 @@ bool Display::run()
 {
     handleEvents();
 
-    _frameDelta = SDL_GetTicks() - _frameStart;
-    SDL_Delay(__max(0, (1000 / _fps) - _frameDelta));
-    _frameStart = SDL_GetTicks();
-
-    if (running)
+    if (_running)
         return true;
-    
+    return false;
+}
+
+bool Display::nextFrame()
+{
+    _frameDelta = SDL_GetTicks() - _frameStart;
+    if (_frameDelta >= (unsigned int)(1000 / _fps))
+    {
+        _frameStart = SDL_GetTicks();
+        return true;
+    }
     return false;
 }
 
@@ -70,7 +82,7 @@ void Display::handleEvents()
     switch (event.type)
     {
     case SDL_QUIT:
-        running = false;
+        _running = false;
         break;
     
     default:

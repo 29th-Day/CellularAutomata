@@ -66,18 +66,21 @@ int main(int argc, char** argv)
     assert(SCALE >= 1, "SCALE must be greater than 0");
     assert(FPS >= 1, "FPS must be greater than 0");
 
-    LifeEngine engine = LifeEngine(HEIGHT, WIDTH, State::randf, Kernel::test, Activation::sigmoid);
-
     Display display = Display(HEIGHT, WIDTH, SCALE, FPS);
+
+    LifeEngine engine = LifeEngine(HEIGHT, WIDTH, State::randb, Kernel::rand, Activation::identity);
+
 
     // MAIN PART
 
-    display.draw(engine.state);
     while(display.run())
     {
-        engine.epoch();
+        if (display.nextFrame())
+        {
+            display.draw(engine.state);
+            engine.epoch();
+        }
 
-        display.draw(engine.state);
     }
 
     return 0;

@@ -8,5 +8,5 @@ namespace Kernel
 
     int half(float **kernel);
 
-    int test(float** kernel);
+    int rand(float** kernel);
 }
