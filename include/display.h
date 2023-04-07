@@ -25,6 +25,7 @@ class Display
         int _scale;
 
         bool _running;
+        bool _pause;
         unsigned long _frameStart;
         unsigned long _frameDelta;
 };

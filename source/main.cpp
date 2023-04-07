@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #include "activations.h"
 #include "kernels.h"
@@ -9,66 +10,55 @@
 
 #include "engine.h"
 
-#define ASSERTION_ERROR -2
+#define assert(x, msg) {if (!(x)) {fprintf(stderr, "Assertion error: %s", msg); exit(-2);}}
 
-#define assert(x, msg) {if (!(x)) {fprintf(stderr, "Assertion error: %s", msg); exit(ASSERTION_ERROR);}}
+#define EQUAL_S(a, b) strcmp(a, b) == 0
 
+struct Arguments {
+    int height;
+    int width;
+    int scale;
+    int fps;
+    int seed;
+};
 
-
-void print2D(float *array, int height, int width)
+void parseArgs(int argc, char** argv, Arguments *args)
 {
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            printf("%.1f ", array[y * width + x]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
+    args->seed = (int)time(NULL);
 
-
-void parseArgs(int argc, char** argv, int *height, int *width, int *scale, int *fps)
-{
     for(int i = 1; i < argc; i+=2)
     {
-        if(strcmp(argv[i], "-h") == 0)
-            *height = atoi(argv[i+1]);
-        else if (strcmp(argv[i], "-w") == 0)
-            *width = atoi(argv[i+1]);
-        else if (strcmp(argv[i], "-s") == 0)
-            *scale = atoi(argv[i+1]);
-        else if (strcmp(argv[i], "-fps") == 0)
-            *fps = atoi(argv[i+1]);
-        else if (strcmp(argv[i], "-seed") == 0)
-            srand((unsigned int)*argv[i+1]);
+        if(EQUAL_S(argv[i], "-h"))
+            args->height = atoi(argv[i+1]);
+        else if (EQUAL_S(argv[i], "-w"))
+            args->width = atoi(argv[i+1]);
+        else if (EQUAL_S(argv[i], "-s"))
+            args->scale = atoi(argv[i+1]);
+        else if (EQUAL_S(argv[i], "-fps"))
+            args->fps = atoi(argv[i+1]);
+        else if (EQUAL_S(argv[i], "-seed"))
+            args->seed = atoi(argv[i+1]);
     }
+
+    assert(args->height > 0, "HEIGHT must be greater than 0");
+    assert(args->width > 0, "WIDTH must be greater than 0");
+    assert(args->scale > 0, "SCALE must be greater than 0");
+    assert(args->fps > 0, "FPS must be greater than 0");
 }
 
 int main(int argc, char** argv)
 {
-    // VARIABLES
-
-    int HEIGHT      = 100;
-    int WIDTH       = 100;
-    int SCALE       = 1;
-    int FPS         = 10;
-
-    int KERNEL_SIZE = 3;
-
     // SETUP
+    Arguments args;
+    parseArgs(argc, argv, &args);
 
-    parseArgs(argc, argv, &HEIGHT, &WIDTH, &SCALE, &FPS);
+    srand(args.seed);
+    printf("seed: %i\n", args.seed);
 
-    assert(HEIGHT >= 1, "HEIGHT must be greater than 0");
-    assert(WIDTH >= 1, "WIDTH must be greater than 0");
-    assert(SCALE >= 1, "SCALE must be greater than 0");
-    assert(FPS >= 1, "FPS must be greater than 0");
+    Display display = Display(args.height, args.width, args.scale, args.fps);
 
-    Display display = Display(HEIGHT, WIDTH, SCALE, FPS);
-
-    LifeEngine engine = LifeEngine(HEIGHT, WIDTH, State::randb, Kernel::rand, Activation::identity);
+    LifeEngine engine = LifeEngine(args.height, args.width,
+        State::randb, Kernel::life, Activation::life);
 
 
     // MAIN PART

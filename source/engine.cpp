@@ -4,7 +4,22 @@
 #include "activations.h"
 #include "states.h"
 
+#include <stdio.h>
+
 #define SWAP(a, b) {float *temp = b; b = a; a = temp;}
+
+void print2D(float *array, int height, int width)
+{
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            printf("%4.1f ", array[y * width + x]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
 
 
 void convolution(float src[], float dest[], int height, int width, float kernel[], int size, activation_func f)
@@ -67,6 +82,8 @@ LifeEngine::LifeEngine(int height, int width, state_func sf, kernel_func kf, act
 
     kernel = nullptr;
     KERNEL_SIZE = kf(&kernel);
+    
+    // print2D(kernel, KERNEL_SIZE, KERNEL_SIZE);
 
     fn = af;
 }

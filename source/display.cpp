@@ -14,11 +14,9 @@ Display::Display(int height, int width, int scale, int fps)
     _frameStart = 0;
     _frameDelta = 0;
     _running = true;
+    _pause = false;
 
-    char title[100];
-    sprintf_s(title, "CellularAutomata (%ux%u)", _width, _height);
-
-    _window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width * _scale, _height * _scale, SDL_WINDOW_SHOWN);
+    _window = SDL_CreateWindow("CellularAutomata", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width * _scale, _height * _scale, SDL_WINDOW_SHOWN);
     _renderer = SDL_CreateRenderer(_window, -1, 0);
     _texture = SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, _width, _height);
 }
@@ -28,6 +26,8 @@ Display::~Display()
     SDL_DestroyTexture(_texture);
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
+
+    SDL_Quit();
 }
 
 void Display::draw(float *data)
@@ -65,6 +65,9 @@ bool Display::run()
 
 bool Display::nextFrame()
 {
+    if (_pause)
+        return false;
+
     _frameDelta = SDL_GetTicks() - _frameStart;
     if (_frameDelta >= (unsigned int)(1000 / _fps))
     {
@@ -84,7 +87,37 @@ void Display::handleEvents()
     case SDL_QUIT:
         _running = false;
         break;
-    
+    // use KEYUP to only activate once and not while holding (hacky)
+    case SDL_KEYUP:
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_p:
+            _pause = !_pause;
+            if (_pause)
+                printf("pause\n");
+            else
+                printf("resume\n");
+            break;
+        default:
+            break;
+        }
+        break;
+    // use KEYDOWN to also use holding
+    case SDL_KEYDOWN:
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_UP:
+            _fps += 1;
+            printf("fps: %u\n", _fps);
+            break;
+        case SDLK_DOWN:
+            _fps -= 1;
+            printf("fps: %u\n", _fps);
+            break;
+        default:
+            break;
+        }
+        break;
     default:
         break;
     }

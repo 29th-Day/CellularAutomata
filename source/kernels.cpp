@@ -2,8 +2,6 @@
 
 #include <stdlib.h>
 
-// #define random() {}
-
 inline float random()
 {
     return ((rand() % 2) ? 1 : -1) * (float)rand()/(float)(RAND_MAX);

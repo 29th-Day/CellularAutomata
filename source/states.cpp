@@ -20,9 +20,6 @@ void State::randf(float current[], int height, int width)
 {
     for (int i = 0; i < height * width; i++)
     {
-        if (random() > 0.8)
-        {
-            current[i] = random();
-        }
+        current[i] = random();
     }
 }
