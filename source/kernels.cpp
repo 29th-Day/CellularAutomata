@@ -1,15 +1,38 @@
 #include "kernels.h"
 
-float **Kernel::life(int* KERNEL_SIZE)
+#include <stdlib.h>
+
+inline float random()
 {
-    float **array = new float*[3];
-    for (int y = 0; y < 3; y++)
-    {
-        array[y] = new float[3] {1.0f, 1.0f, 1.0f};
-    }
-    array[1][1] = 0.5f;
+    return ((rand() % 2) ? 1 : -1) * (float)rand()/(float)(RAND_MAX);
+}
 
-    *KERNEL_SIZE = 3;
+int Kernel::life(float** kernel)
+{
+    *kernel = new float[3 * 3] {
+        1.0f, 1.0f, 1.0f,
+        1.0f, 0.5f, 1.0f,
+        1.0f, 1.0f, 1.0f
+    };
+    return 3;
+}
 
-    return array;
+int Kernel::half(float** kernel)
+{
+    *kernel = new float[3 * 3] {
+        0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f
+    };
+    return 3;
+}
+
+int Kernel::rand(float** kernel)
+{
+    *kernel = new float[3 * 3] {
+        random(), random(), random(),
+        random(), random(), random(),
+        random(), random(), random()
+    };
+    return 3;
 }
