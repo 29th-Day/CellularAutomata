@@ -13,10 +13,10 @@ class Display
         bool nextFrame();
     private:
         void handleEvents();
-        void wait();
 
         SDL_Window *_window;
         SDL_Renderer *_renderer;
+        SDL_Texture *_texture;
 
         int _fps;
         int _height;

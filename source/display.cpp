@@ -122,8 +122,3 @@ void Display::handleEvents()
         break;
     }
 }
-
-void Display::wait()
-{
-    SDL_Delay(30);
-}
