@@ -1,8 +1,6 @@
 /**
  * @file engine.h
  * @author 29th-Day (https://github.com/29th-Day)
- * @version 0.1
- * @date 2023-04-15
  *
  * @copyright Copyright (c) 2023
  *
