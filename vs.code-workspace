@@ -55,6 +55,8 @@
 		},
 		"cSpell.words": [
 			"keysym",
+			"randb",
+			"randf",
 			"SDLK"
 		]
 	}

@@ -2,17 +2,17 @@
 
 #include <math.h>
 
-float Activation::identity(float x)
+float Activations::identity(float x)
 {
     return x;
 }
 
-float Activation::sigmoid(float x)
+float Activations::sigmoid(float x)
 {
     return (1 / (1 + powf(EULER_NUMBER_F, -x)));
 }
 
-float Activation::life(float x)
+float Activations::life(float x)
 {
     int neighbors = (int)x;
     bool alive = ((x - neighbors) > 0) ? true : false;

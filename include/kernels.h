@@ -1,12 +1,12 @@
 #pragma once
 
-typedef int (*kernel_func)(float**);
+#include "common.h"
 
-namespace Kernel
+namespace Kernels
 {
-    int life(float** kernel);
+    void life(Kernel *kernel);
 
-    int half(float **kernel);
+    void half(Kernel *kernel);
 
-    int rand(float** kernel);
+    void rand(Kernel *kernel);
 }

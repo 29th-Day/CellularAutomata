@@ -1,10 +1,10 @@
 #pragma once
 
-typedef void (*state_func)(float[], int, int);
+#include "common.h"
 
-namespace State
+namespace States
 {
-    void randb(float current[], int height, int width);
+    void randb(State *state);
 
-    void randf(float current[], int height, int width);
+    void randf(State *state);
 }

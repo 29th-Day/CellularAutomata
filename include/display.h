@@ -4,27 +4,28 @@
 
 class Display
 {
-    public:
-        Display(int height, int width, int scale = 1, int fps = 10);
-        ~Display();
+public:
+    Display(int height, int width, int scale = 1, int fps = 10);
+    ~Display();
 
-        void draw(float *data);
-        bool run();
-        bool nextFrame();
-    private:
-        void handleEvents();
+    void draw(float *data);
+    bool run();
+    bool nextFrame();
 
-        SDL_Window *_window;
-        SDL_Renderer *_renderer;
-        SDL_Texture *_texture;
+private:
+    void handleEvents();
 
-        int _fps;
-        int _height;
-        int _width;
-        int _scale;
+    SDL_Window *_window;
+    SDL_Renderer *_renderer;
+    SDL_Texture *_texture;
 
-        bool _running;
-        bool _pause;
-        unsigned long _frameStart;
-        unsigned long _frameDelta;
+    int _fps;
+    int _height;
+    int _width;
+    int _scale;
+
+    bool _running;
+    bool _pause;
+    unsigned long _frameStart;
+    unsigned long _frameDelta;
 };
