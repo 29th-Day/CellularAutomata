@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (c) 2023
  *
+ * This software is licensed under the MIT License
  */
 
 #pragma once
