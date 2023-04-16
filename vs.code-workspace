@@ -8,6 +8,7 @@
 		"files.associations": {
 			"*.pxd": "cython",
 			"*.pyx": "cython",
+			"*.tex": "latex",
 			"vector": "cpp",
 			"atomic": "cpp",
 			"bit": "cpp",
@@ -51,7 +52,9 @@
 			"xstring": "cpp",
 			"xtr1common": "cpp",
 			"xutility": "cpp",
-			"random": "cpp"
+			"random": "cpp",
+			"algorithm": "cpp",
+			"optional": "cpp"
 		},
 		"cSpell.words": [
 			"keysym",

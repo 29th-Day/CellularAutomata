@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "common.h"
+#include "rng.h"
 
 #include <stdlib.h>
 
@@ -68,9 +69,9 @@
 //     }
 // }
 
-void Engine::InitRandom(unsigned int seed)
+unsigned int Engine::InitRandom(unsigned int seed)
 {
-    srand(seed);
+    return RNG::seed(seed);
 }
 
 void Engine::InitState(State *state, int height, int width, state_func f)
