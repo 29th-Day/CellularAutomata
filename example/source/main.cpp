@@ -56,8 +56,6 @@ int main(int argc, char **argv)
     args.seed = Engine::InitRandom(args.seed);
     printf("seed: %u\n", args.seed);
 
-    Display display = Display(args.height, args.width, args.scale, args.fps);
-
     State state;
     Kernel kernel;
 
@@ -66,6 +64,7 @@ int main(int argc, char **argv)
 
     // MAIN PART
 
+    Display display = Display(args.height, args.width, args.scale, args.fps);
     while (display.run())
     {
         if (display.nextFrame())

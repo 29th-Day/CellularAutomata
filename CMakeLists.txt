@@ -3,10 +3,6 @@ project(CellularAutomata VERSION 0.1.0)
 
 include(CTest)
 enable_testing()
-include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/source
-)
 
 file(GLOB FILES
     "${PROJECT_SOURCE_DIR}/include/*.h"
@@ -15,17 +11,13 @@ file(GLOB FILES
     "${PROJECT_SOURCE_DIR}/source/*.c"
 )
 
-add_executable(${PROJECT_NAME} ${FILES})
-
-find_package(SDL2 CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-)
+add_library(${PROJECT_NAME} STATIC ${FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+add_subdirectory(example)
