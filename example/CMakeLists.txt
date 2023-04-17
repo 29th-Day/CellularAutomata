@@ -1,22 +1,28 @@
 MESSAGE("BUILD EXAMPLE")
 
-set(FILES_SOURCES
+set(TARGET example)
+
+# packages
+find_package(SDL2 CONFIG REQUIRED)
+
+# source files
+set(FILES
     source/main.cpp
     source/display.cpp
 )
 
-add_executable(example  ${FILES_SOURCES})
+# build executable
+add_executable(${TARGET} ${FILES})
 
 # include header files
-target_include_directories(example PRIVATE include)
+target_include_directories(${TARGET} PRIVATE include)
 
 # link SDL
-find_package(SDL2 CONFIG REQUIRED)
-target_link_libraries(example
+target_link_libraries(${TARGET}
     PRIVATE
     $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
     $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
 )
 
 # link CellularAutomata
-target_link_libraries(example PRIVATE ${PROJECT_NAME})
+target_link_libraries(${TARGET} PRIVATE ${PROJECT_NAME})

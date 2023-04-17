@@ -4,6 +4,15 @@
 
 #include <stdlib.h>
 
+void Kernels::full(Kernel *kernel)
+{
+    kernel->kernel = new float[3 * 3]{
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f};
+    kernel->size = 3;
+}
+
 void Kernels::life(Kernel *kernel)
 {
     kernel->kernel = new float[3 * 3]{

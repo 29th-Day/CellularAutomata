@@ -31,7 +31,7 @@ namespace Engine
      * @param state reference to a state
      * @param height height of the world
      * @param width width of the world
-     * @param f function for initialising the world
+     * @param f function for initialising the world. May be NULL
      */
     void InitState(State *state, int height, int width, state_func f);
 

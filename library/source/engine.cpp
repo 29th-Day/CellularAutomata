@@ -81,7 +81,8 @@ void Engine::InitState(State *state, int height, int width, state_func f)
     state->width = width;
     state->current = new float[height * width]();
     state->next = new float[height * width]();
-    f(state);
+    if (f != NULL)
+        f(state);
 }
 
 void Engine::DestroyState(State *state)
@@ -89,7 +90,9 @@ void Engine::DestroyState(State *state)
     delete[] state->current;
     state->current = nullptr;
     delete[] state->next;
-    state->current = nullptr;
+    state->next = nullptr;
+    state->height = 0;
+    state->width = 0;
 }
 
 void Engine::InitKernel(Kernel *kernel, kernel_func f)
@@ -101,6 +104,7 @@ void Engine::DestroyKernel(Kernel *kernel)
 {
     delete[] kernel->kernel;
     kernel->kernel = nullptr;
+    kernel->size = 0;
 }
 
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f)
