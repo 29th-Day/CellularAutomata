@@ -35,7 +35,7 @@ void Display::draw(float *data)
     unsigned int *pixels = NULL;
     int pitch = NULL;
 
-    SDL_LockTexture(_texture, NULL, (void**)&pixels, &pitch);
+    SDL_LockTexture(_texture, NULL, (void **)&pixels, &pitch);
 
     // printf("pitch: %u\n", pitch);
 

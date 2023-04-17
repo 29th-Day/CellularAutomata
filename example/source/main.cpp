@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "engine.h"
 #include "display.h"
@@ -27,8 +26,6 @@ struct Arguments
 
 void parseArgs(int argc, char **argv, Arguments *args)
 {
-    args->seed = (int)time(NULL);
-
     for (int i = 1; i < argc; i += 2)
     {
         if (EQUAL_S(argv[i], "-h"))
@@ -52,13 +49,12 @@ void parseArgs(int argc, char **argv, Arguments *args)
 int main(int argc, char **argv)
 {
     // SETUP
-    Arguments args;
+
+    Arguments args{0};
     parseArgs(argc, argv, &args);
 
-    Display display = Display(args.height, args.width, args.scale, args.fps);
-
-    Engine::InitRandom(args.seed);
-    printf("seed: %i\n", args.seed);
+    args.seed = Engine::InitRandom(args.seed);
+    printf("seed: %u\n", args.seed);
 
     State state;
     Kernel kernel;
@@ -68,6 +64,7 @@ int main(int argc, char **argv)
 
     // MAIN PART
 
+    Display display = Display(args.height, args.width, args.scale, args.fps);
     while (display.run())
     {
         if (display.nextFrame())

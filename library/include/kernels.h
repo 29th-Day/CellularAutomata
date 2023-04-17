@@ -4,6 +4,8 @@
 
 namespace Kernels
 {
+    void full(Kernel *kernel);
+
     void life(Kernel *kernel);
 
     void half(Kernel *kernel);

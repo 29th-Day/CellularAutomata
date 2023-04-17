@@ -10,6 +10,7 @@
 #pragma once
 
 #include "common.h"
+#include "rng.h"
 #include "states.h"
 #include "kernels.h"
 #include "activations.h"
@@ -18,10 +19,11 @@ namespace Engine
 {
     /**
      * @brief Initializes RNG
-     * @details Initializes RNG and sets seed for reproducible outcomes.
+     * @details Seeds RNG for reproducible outcomes. Seed is randomized if NULL.
      * @param seed RNG seed
+     * @return used seed
      */
-    void InitRandom(unsigned int seed);
+    unsigned int InitRandom(unsigned int seed);
 
     /**
      * @brief Initializes a state
@@ -29,7 +31,7 @@ namespace Engine
      * @param state reference to a state
      * @param height height of the world
      * @param width width of the world
-     * @param f function for initialising the world
+     * @param f function for initialising the world. May be NULL
      */
     void InitState(State *state, int height, int width, state_func f);
 

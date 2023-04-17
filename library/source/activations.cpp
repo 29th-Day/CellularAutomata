@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#define EULER_NUMBER_F 2.71828182846f
+
 float Activations::identity(float x)
 {
     return x;
@@ -27,8 +29,21 @@ float Activations::life(float x)
         // over population
         return 0.0f;
     else if (alive && neighbors == 2)
-        // staying alife
+        // staying alive
         return 1.0f;
     else
         return 0.0f;
+
+    switch (neighbors)
+    {
+    case 2:
+        // staying alive
+        return (alive) ? 1.0f : 0.0f;
+    case 3:
+        // birth
+        return 1.0f;
+    default:
+        // under- / overpopulation
+        return 0.0f;
+    }
 }

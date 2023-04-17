@@ -1,11 +1,16 @@
 #include "kernels.h"
 #include "common.h"
+#include "rng.h"
 
 #include <stdlib.h>
 
-inline float random()
+void Kernels::full(Kernel *kernel)
 {
-    return ((rand() % 2) ? 1 : -1) * (float)rand() / (float)(RAND_MAX);
+    kernel->kernel = new float[3 * 3]{
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f};
+    kernel->size = 3;
 }
 
 void Kernels::life(Kernel *kernel)
@@ -29,8 +34,8 @@ void Kernels::half(Kernel *kernel)
 void Kernels::rand(Kernel *kernel)
 {
     kernel->kernel = new float[3 * 3]{
-        random(), random(), random(),
-        random(), random(), random(),
-        random(), random(), random()};
+        RNG::decimal(), RNG::decimal(), RNG::decimal(),
+        RNG::decimal(), RNG::decimal(), RNG::decimal(),
+        RNG::decimal(), RNG::decimal(), RNG::decimal()};
     kernel->size = 3;
 }
