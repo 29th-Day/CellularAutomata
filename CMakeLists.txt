@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(CellularAutomata VERSION 0.1.0 LANGUAGES CXX)
+project(CellularAutomata VERSION 0.1.0 LANGUAGES CXX HOMEPAGE_URL https://github.com/29th-Day/CellularAutomata)
 
 option(BUILD_EXAMPLE "Build example?" ON)
 option(BUILD_TESTS "Run tests?" ON)
@@ -12,6 +12,7 @@ add_subdirectory(library)
 # set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 if(${BUILD_TESTS})
+    include(CTest)
     add_subdirectory(tests)
 endif()
 

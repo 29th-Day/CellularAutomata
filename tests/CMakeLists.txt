@@ -6,7 +6,6 @@ set(TARGET UnitTest)
 find_package(doctest CONFIG REQUIRED)
 
 # includes
-include(CTest)
 include(doctest)
 
 # build executable
