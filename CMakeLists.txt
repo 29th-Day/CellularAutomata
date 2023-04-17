@@ -18,8 +18,3 @@ endif()
 if (${BUILD_EXAMPLE})
     add_subdirectory(example)
 endif()
-
-# ???
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
