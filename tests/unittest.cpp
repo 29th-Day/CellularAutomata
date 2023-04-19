@@ -82,8 +82,8 @@ TEST_SUITE("KERNELS")
 
 TEST_SUITE("ACTIVATIONS")
 {
-    const int length = 7;
-    std::array<float, length> x = {0.0f, 0.5f, 1.0f, 3.1415f, 5.0f, 9.0f, 100.0f};
+    const int length = 10;
+    std::array<float, length> x = {-10.0f, -3.0f, -1.0f, 0.0f, 0.5f, 1.0f, 3.1415f, 5.0f, 9.0f, 100.0f};
 
     TEST_CASE("ACTIVATIONS - identity")
     {
@@ -95,11 +95,11 @@ TEST_SUITE("ACTIVATIONS")
 
     TEST_CASE("ACTIVATIONS - sigmoid")
     {
-        std::array<float, length> y = {0.0f, 0.5f, 1.0f, 3.1415f, 5.0f, 9.0f, 100.0f};
+        std::array<float, length> y = {0.00005f, 0.04743f, 0.26894f, 0.5f, 0.62246f, 0.73106f, 0.95857f, 0.99331f, 0.99988f, 1.0f};
 
         for (int i = 0; i < length; i++)
         {
-            CHECK(Activations::identity(x[i]) == doctest::Approx(y[i]));
+            CHECK(Activations::sigmoid(x[i]) == doctest::Approx(y[i]));
         }
     }
 
