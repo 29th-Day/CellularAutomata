@@ -19,20 +19,20 @@ float Activations::life(float x)
     int neighbors = (int)x;
     bool alive = ((x - neighbors) > 0) ? true : false;
 
-    if (neighbors == 3)
-        // birth
-        return 1.0f;
-    else if (neighbors < 2)
-        // loneliness
-        return 0.0f;
-    else if (neighbors > 3)
-        // over population
-        return 0.0f;
-    else if (alive && neighbors == 2)
-        // staying alive
-        return 1.0f;
-    else
-        return 0.0f;
+    // if (neighbors == 3)
+    //     // birth
+    //     return 1.0f;
+    // else if (neighbors < 2)
+    //     // loneliness
+    //     return 0.0f;
+    // else if (neighbors > 3)
+    //     // over population
+    //     return 0.0f;
+    // else if (alive && neighbors == 2)
+    //     // staying alive
+    //     return 1.0f;
+    // else
+    //     return 0.0f;
 
     switch (neighbors)
     {
