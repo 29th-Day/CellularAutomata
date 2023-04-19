@@ -105,6 +105,16 @@ TEST_SUITE("ACTIVATIONS")
 
     TEST_CASE("ACTIVATIONS - life")
     {
+        CHECK(Activations::life(0.0f) == 0.0f);
+        CHECK(Activations::life(1.0f) == 0.0f);
+        CHECK(Activations::life(2.0f) == 0.0f);
+        CHECK(Activations::life(2.5f) == 1.0f);
+        CHECK(Activations::life(3.0f) == 1.0f);
+        CHECK(Activations::life(4.0f) == 0.0f);
+        CHECK(Activations::life(5.0f) == 0.0f);
+        CHECK(Activations::life(6.0f) == 0.0f);
+        CHECK(Activations::life(7.0f) == 0.0f);
+        CHECK(Activations::life(8.0f) == 0.0f);
     }
 }
 
