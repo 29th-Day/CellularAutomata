@@ -16,19 +16,6 @@
         a = temp;      \
     }
 
-// void print2D(float *array, int height, int width)
-// {
-//     for (int y = 0; y < height; y++)
-//     {
-//         for (int x = 0; x < width; x++)
-//         {
-//             printf("%4.1f ", array[y * width + x]);
-//         }
-//         printf("\n");
-//     }
-//     printf("\n");
-// }
-
 unsigned int Engine::InitRandom(unsigned int seed)
 {
     return RNG::seed(seed);
@@ -69,10 +56,10 @@ void Engine::DestroyKernel(Kernel *kernel)
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
 
-    // iterate over state array
-    #ifdef OPENMP
-    #pragma omp parallel for
-    #endif
+// iterate over state array
+#ifdef OPENMP
+#pragma omp parallel for
+#endif
     for (int row = 0; row < state->height; row++)
     {
         // definitons inside first loop for parallelization

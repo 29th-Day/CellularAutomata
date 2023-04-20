@@ -28,6 +28,18 @@
 
 #define EQUAL_S(a, b) strcmp(a, b) == 0
 
+void print2D(float *array, int height, int width)
+{
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            printf("%4.1f ", array[y * width + x]);
+        }
+        printf("\n");
+    }
+}
+
 struct Arguments
 {
     unsigned int height;
@@ -66,7 +78,7 @@ int main(int argc, char *argv[])
 {
     // SETUP
 
-    Arguments args{ 0 };
+    Arguments args{0};
     parseArgs(argc, argv, &args);
 
     args.seed = Engine::InitRandom(args.seed);
@@ -76,7 +88,9 @@ int main(int argc, char *argv[])
     Kernel kernel;
 
     Engine::InitState(&state, args.height, args.width, States::randb);
-    Engine::InitKernel(&kernel, Kernels::life);
+    Engine::InitKernel(&kernel, Kernels::rand);
+
+    print2D(kernel.kernel, kernel.size, kernel.size);
 
     // States::Objects::Glider(&state, 50, 40, States::Objects::UP_LEFT);
     // States::Objects::Glider(&state, 50, 50, States::Objects::UP_RIGHT);
@@ -96,7 +110,7 @@ int main(int argc, char *argv[])
             // auto t1 = std::chrono::high_resolution_clock::now();
             // #endif _DEBUG
 
-            Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
+            Engine::Epoch(&state, &kernel, Activations::clip, args.recursive);
 
             // #ifdef _DEBUG
             // auto t2 = std::chrono::high_resolution_clock::now();
@@ -111,7 +125,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-// int main(int argc, char *argv[])
-// {
-// }

@@ -11,4 +11,6 @@ namespace Kernels
     void half(Kernel *kernel);
 
     void rand(Kernel *kernel);
+
+    void randp(Kernel *kernel);
 }

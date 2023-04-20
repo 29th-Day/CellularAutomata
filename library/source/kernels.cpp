@@ -39,3 +39,12 @@ void Kernels::rand(Kernel *kernel)
         RNG::decimal(-1, 1), RNG::decimal(-1, 1), RNG::decimal(-1, 1)};
     kernel->size = 3;
 }
+
+void Kernels::randp(Kernel *kernel)
+{
+    kernel->kernel = new float[3 * 3]{
+        RNG::decimal(0, 1), RNG::decimal(0, 1), RNG::decimal(0, 1),
+        RNG::decimal(0, 1), RNG::decimal(0, 1), RNG::decimal(0, 1),
+        RNG::decimal(0, 1), RNG::decimal(0, 1), RNG::decimal(0, 1)};
+    kernel->size = 3;
+}

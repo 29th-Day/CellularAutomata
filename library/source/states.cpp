@@ -9,7 +9,7 @@ void States::randb(State *state)
 {
     for (int i = 0; i < state->height * state->width; i++)
     {
-        if (RNG::number())
+        if (RNG::number(0, 1))
             state->current[i] = 1.0f;
     }
 }
@@ -46,7 +46,7 @@ void States::Objects::Glider(State *state, int x, int y, Direction type)
         float glider[3 * 3]{
             0, 1, 0,
             0, 0, 1,
-            1, 1, 1};
+            1, 1, 1 };
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
@@ -55,7 +55,7 @@ void States::Objects::Glider(State *state, int x, int y, Direction type)
         float glider[3 * 3]{
             0, 1, 0,
             1, 0, 0,
-            1, 1, 1};
+            1, 1, 1 };
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
@@ -64,7 +64,7 @@ void States::Objects::Glider(State *state, int x, int y, Direction type)
         float glider[3 * 3]{
             1, 1, 1,
             0, 0, 1,
-            0, 1, 0};
+            0, 1, 0 };
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
@@ -73,7 +73,7 @@ void States::Objects::Glider(State *state, int x, int y, Direction type)
         float glider[3 * 3]{
             1, 1, 1,
             1, 0, 0,
-            0, 1, 0};
+            0, 1, 0 };
         copy_into(glider, 3, 3, state, x, y);
         return;
     }

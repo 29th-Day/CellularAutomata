@@ -20,7 +20,7 @@ namespace RNG
      * @param max Maximum value of range
      * @return random integer
      */
-    int number(int min = 0, int max = 1);
+    int number(int min, int max);
 
     /**
      * @brief Generates a random float
