@@ -29,51 +29,6 @@
 //     printf("\n");
 // }
 
-// void convolution(float src[], float dest[], int height, int width, float kernel[], int size, activation_func f)
-// {
-//     int relative_y = 0;
-//     int relative_x = 0;
-//
-//     int array_y = 0;
-//     int array_x = 0;
-//
-//     float sum = 0;
-//
-//     for (int row = 0; row < height; row++)
-//     {
-//         for (int col = 0; col < width; col++)
-//         {
-//
-//             for (int y = 0; y < size; y++)
-//             {
-//                 for (int x = 0; x < size; x++)
-//                 {
-//                     relative_y = y - (size / 2);
-//                     relative_x = x - (size / 2);
-//
-//                     array_y = row + relative_y;
-//                     array_x = col + relative_x;
-//
-//                     // printf("(%2i, %2i) ", array_y, array_x);
-//
-//                     if (array_y < 0 || array_y >= height)
-//                         continue; // add nothing
-//
-//                     if (array_x < 0 || array_x >= width)
-//                         continue; // add nothing
-//
-//                     sum += src[array_y * width + array_x] * kernel[y * size + x];
-//                 }
-//
-//                 // printf("\n");
-//             }
-//
-//             dest[row * width + col] = f(sum);
-//             sum = 0.0f;
-//         }
-//     }
-// }
-
 unsigned int Engine::InitRandom(unsigned int seed)
 {
     return RNG::seed(seed);
@@ -81,7 +36,6 @@ unsigned int Engine::InitRandom(unsigned int seed)
 
 void Engine::InitState(State *state, int height, int width, state_func f)
 {
-    // state = new float[HEIGHT * WIDTH]();
     state->height = height;
     state->width = width;
     state->current = new float[height * width]();
@@ -121,7 +75,7 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
     #endif
     for (int row = 0; row < state->height; row++)
     {
-        // definitons inside first look for parallelization
+        // definitons inside first loop for parallelization
         int kernel_center = kernel->size / 2;
         int array_y = 0;
         int array_x = 0;
