@@ -22,7 +22,9 @@ void States::randf(State *state)
     }
 }
 
-void copy_into(float *src, int height, int width, State *state, int x, int y)
+// States::Objects
+
+inline void copy_into(float *src, int height, int width, State *state, int x, int y)
 {
     int i = 0;
     for (int _y = y; _y < y + height; _y++)

@@ -17,11 +17,11 @@
 
 struct Arguments
 {
-    int height;
-    int width;
-    int scale;
-    int fps;
-    int seed;
+    unsigned int height;
+    unsigned int width;
+    unsigned int scale;
+    unsigned int fps;
+    unsigned int seed;
     bool recursive;
 };
 
@@ -48,8 +48,8 @@ void parseArgs(int argc, char **argv, Arguments *args)
     assert(args->scale > 0, "SCALE must be greater than 0");
     assert(args->fps > 0, "FPS must be greater than 0");
 }
-
-int main(int argc, char **argv)
+/*
+int main(int argc, char *argv[])
 {
     // SETUP
 
@@ -64,12 +64,6 @@ int main(int argc, char **argv)
 
     Engine::InitState(&state, args.height, args.width, NULL);
     Engine::InitKernel(&kernel, Kernels::life);
-
-    // state.current[50 * state.width + 5] = 1.0f;
-    // state.current[50 * state.width + 6] = 1.0f;
-    // state.current[50 * state.width + 7] = 1.0f;
-    // state.current[49 * state.width + 7] = 1.0f;
-    // state.current[48 * state.width + 6] = 1.0f;
 
     States::Objects::Glider(&state, 50, 40, States::Objects::UP_LEFT);
     States::Objects::Glider(&state, 50, 50, States::Objects::UP_RIGHT);
@@ -92,4 +86,9 @@ int main(int argc, char **argv)
     Engine::DestroyKernel(&kernel);
 
     return 0;
+}
+*/
+
+int main(int argc, char *argv[])
+{
 }
