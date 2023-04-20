@@ -141,6 +141,24 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
                     if (recursive)
                     {
                         // printf("INFO: Recursion isn't implemented yet\n");
+
+                        if (array_y < 0)
+                        {
+                            array_y = state->height + array_y;
+                        }
+                        else if (array_y >= state->height)
+                        {
+                            array_y = array_y - state->height;
+                        }
+
+                        if (array_x < 0)
+                        {
+                            array_x = state->width + array_x;
+                        }
+                        else if (array_x >= state->width)
+                        {
+                            array_x = array_x - state->width;
+                        }
                     }
                     else
                     {

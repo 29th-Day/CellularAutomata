@@ -22,6 +22,7 @@ struct Arguments
     int scale;
     int fps;
     int seed;
+    bool recursive;
 };
 
 void parseArgs(int argc, char **argv, Arguments *args)
@@ -38,6 +39,8 @@ void parseArgs(int argc, char **argv, Arguments *args)
             args->fps = atoi(argv[i + 1]);
         else if (EQUAL_S(argv[i], "-seed"))
             args->seed = atoi(argv[i + 1]);
+        else if (EQUAL_S(argv[i], "-r"))
+            args->recursive = true;
     }
 
     assert(args->height > 0, "HEIGHT must be greater than 0");
@@ -59,8 +62,19 @@ int main(int argc, char **argv)
     State state;
     Kernel kernel;
 
-    Engine::InitState(&state, args.height, args.width, States::randb);
+    Engine::InitState(&state, args.height, args.width, NULL);
     Engine::InitKernel(&kernel, Kernels::life);
+
+    // state.current[50 * state.width + 5] = 1.0f;
+    // state.current[50 * state.width + 6] = 1.0f;
+    // state.current[50 * state.width + 7] = 1.0f;
+    // state.current[49 * state.width + 7] = 1.0f;
+    // state.current[48 * state.width + 6] = 1.0f;
+
+    States::Objects::Glider(&state, 50, 40, States::Objects::UP_LEFT);
+    States::Objects::Glider(&state, 50, 50, States::Objects::UP_RIGHT);
+    States::Objects::Glider(&state, 60, 40, States::Objects::DOWN_RIGHT);
+    States::Objects::Glider(&state, 60, 50, States::Objects::DOWN_LEFT);
 
     // MAIN PART
 
@@ -70,7 +84,7 @@ int main(int argc, char **argv)
         if (display.nextFrame())
         {
             display.draw(state.current);
-            Engine::Epoch(&state, &kernel, Activations::life, false);
+            Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
         }
     }
 
