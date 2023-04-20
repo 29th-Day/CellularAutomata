@@ -34,8 +34,8 @@ void Kernels::half(Kernel *kernel)
 void Kernels::rand(Kernel *kernel)
 {
     kernel->kernel = new float[3 * 3]{
-        RNG::decimal(), RNG::decimal(), RNG::decimal(),
-        RNG::decimal(), RNG::decimal(), RNG::decimal(),
-        RNG::decimal(), RNG::decimal(), RNG::decimal()};
+        RNG::decimal(-1, 1), RNG::decimal(-1, 1), RNG::decimal(-1, 1),
+        RNG::decimal(-1, 1), RNG::decimal(-1, 1), RNG::decimal(-1, 1),
+        RNG::decimal(-1, 1), RNG::decimal(-1, 1), RNG::decimal(-1, 1)};
     kernel->size = 3;
 }

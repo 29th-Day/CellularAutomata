@@ -29,5 +29,5 @@ namespace RNG
      * @param max Maximum value of range
      * @return random float
      */
-    float decimal(float min = 0.0f, float max = 1.0f);
+    float decimal(float min, float max);
 }

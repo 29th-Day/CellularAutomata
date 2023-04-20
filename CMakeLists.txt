@@ -4,6 +4,8 @@ project(CellularAutomata VERSION 0.1.0 LANGUAGES CXX HOMEPAGE_URL https://github
 option(BUILD_EXAMPLE "Build example?" ON)
 option(BUILD_TESTS "Run tests?" ON)
 
+option(USE_OPENMP "Use OpenMP in Engine?" ON)
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(library)

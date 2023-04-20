@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef OPENMP
+#include <omp.h>
+#endif
+
 #define SWAP(a, b)     \
     {                  \
         auto temp = b; \
@@ -110,18 +114,19 @@ void Engine::DestroyKernel(Kernel *kernel)
 
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
-    // convolution
-    int relative_y = 0;
-    int relative_x = 0;
-
-    int array_y = 0;
-    int array_x = 0;
-
-    float sum = 0.0f;
 
     // iterate over state array
+    #ifdef OPENMP
+    #pragma omp parallel for
+    #endif
     for (int row = 0; row < state->height; row++)
     {
+        // definitons inside first look for parallelization
+        int kernel_center = kernel->size / 2;
+        int array_y = 0;
+        int array_x = 0;
+        float sum = 0.0f;
+
         for (int col = 0; col < state->width; col++)
         {
 
@@ -130,42 +135,29 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
             {
                 for (int x = 0; x < kernel->size; x++)
                 {
-                    // calculate relative position to middle
-                    relative_y = y - (kernel->size / 2);
-                    relative_x = x - (kernel->size / 2);
-
                     // calculate state array positions
-                    array_y = row + relative_y;
-                    array_x = col + relative_x;
+                    array_y = row + (y - kernel_center);
+                    array_x = col + (x - kernel_center);
 
                     if (recursive)
                     {
-                        // printf("INFO: Recursion isn't implemented yet\n");
-
+                        // overflow y
                         if (array_y < 0)
-                        {
                             array_y = state->height + array_y;
-                        }
                         else if (array_y >= state->height)
-                        {
                             array_y = array_y - state->height;
-                        }
-
+                        // overflow x
                         if (array_x < 0)
-                        {
                             array_x = state->width + array_x;
-                        }
                         else if (array_x >= state->width)
-                        {
                             array_x = array_x - state->width;
-                        }
                     }
                     else
                     {
-                        // out of bounds (y)
+                        // overflow y
                         if (array_y < 0 || array_y >= state->height)
                             continue; // add nothing
-                        // out of bounds (x)
+                        // overflow x
                         if (array_x < 0 || array_x >= state->width)
                             continue; // add nothing
                     }

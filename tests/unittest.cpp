@@ -20,10 +20,10 @@ TEST_SUITE("RNG")
     TEST_CASE("RNG - specific seed")
     {
         RNG::seed(1);
-        float a = RNG::decimal(0.0f, 1.0f);
-        float b = RNG::decimal(0.0f, 1.0f);
+        float a = RNG::decimal(0, 1);
+        float b = RNG::decimal(0, 1);
         RNG::seed(1);
-        float c = RNG::decimal(0.0f, 1.0f);
+        float c = RNG::decimal(0, 1);
         CHECK(a == c);
         CHECK(a != b);
     }
@@ -31,10 +31,10 @@ TEST_SUITE("RNG")
     TEST_CASE("RNG - random seed")
     {
         RNG::seed(NULL);
-        float a = RNG::decimal(0.0f, 1.0f);
-        float b = RNG::decimal(0.0f, 1.0f);
+        float a = RNG::decimal(0, 1);
+        float b = RNG::decimal(0, 1);
         RNG::seed(NULL);
-        float c = RNG::decimal(0.0f, 1.0f);
+        float c = RNG::decimal(0, 1);
         CHECK(a != b);
         CHECK(a != c);
     }

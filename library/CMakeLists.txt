@@ -1,5 +1,10 @@
 MESSAGE("BUILD LIBRARY")
 
+# include packages
+if(${USE_OPENMP})
+    find_package(OpenMP REQUIRED)
+endif()
+
 # source files
 set(FILES
     source/engine.cpp
@@ -11,6 +16,14 @@ set(FILES
 
 # build static library
 add_library(${PROJECT_NAME} STATIC ${FILES})
+
+# link OpenMP
+if(OpenMP_CXX_FOUND)
+    MESSAGE("Using OpenMP")
+    add_compile_definitions(OPENMP=${USE_OPENMP})
+    add_compile_options(/openmp)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+endif()
 
 # include header files (public so the others can access it (?))
 target_include_directories(${PROJECT_NAME} PUBLIC include)

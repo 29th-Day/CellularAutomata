@@ -18,7 +18,7 @@ void States::randf(State *state)
 {
     for (int i = 0; i < state->height * state->width; i++)
     {
-        state->current[i] = RNG::decimal();
+        state->current[i] = RNG::decimal(0, 1);
     }
 }
 
