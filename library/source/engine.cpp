@@ -3,6 +3,7 @@
 #include "rng.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #define SWAP(a, b)     \
     {                  \
@@ -107,7 +108,7 @@ void Engine::DestroyKernel(Kernel *kernel)
     kernel->size = 0;
 }
 
-void Engine::Epoch(State *state, Kernel *kernel, activation_func f)
+void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
     // convolution
     int relative_y = 0;
@@ -137,12 +138,19 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f)
                     array_y = row + relative_y;
                     array_x = col + relative_x;
 
-                    // recursion / nothing
-                    if (array_y < 0 || array_y >= state->height)
-                        continue; // add nothing
-
-                    if (array_x < 0 || array_x >= state->width)
-                        continue; // add nothing
+                    if (recursive)
+                    {
+                        // printf("INFO: Recursion isn't implemented yet\n");
+                    }
+                    else
+                    {
+                        // out of bounds (y)
+                        if (array_y < 0 || array_y >= state->height)
+                            continue; // add nothing
+                        // out of bounds (x)
+                        if (array_x < 0 || array_x >= state->width)
+                            continue; // add nothing
+                    }
 
                     // State x Kernel
                     sum += state->current[array_y * state->width + array_x] * kernel->kernel[y * kernel->size + x];

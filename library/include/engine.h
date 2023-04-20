@@ -63,6 +63,7 @@ namespace Engine
      * @param state reference to a state
      * @param kernel reference to a kernel
      * @param f activation function after convolution
+     * @param recursive wrap the convolution around the borders of the world ("infinite grid")
      */
-    void Epoch(State *state, Kernel *kernel, activation_func f);
+    void Epoch(State *state, Kernel *kernel, activation_func f, bool recursive);
 }

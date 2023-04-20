@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         if (display.nextFrame())
         {
             display.draw(state.current);
-            Engine::Epoch(&state, &kernel, Activations::life);
+            Engine::Epoch(&state, &kernel, Activations::life, false);
         }
     }
 

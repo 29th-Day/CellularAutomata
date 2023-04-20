@@ -7,6 +7,14 @@
 
 // https://github.com/doctest/doctest
 
+// #define CHECK_ARRAY_APPROX(a, b, l)               \
+//     {                                             \
+//         for (int i = 0; i < l; i++)               \
+//         {                                         \
+//             CHECK(a[i] == doctest::Approx(b[i])); \
+//         }                                         \
+//     }
+
 TEST_SUITE("RNG")
 {
     TEST_CASE("RNG - specific seed")
@@ -128,17 +136,100 @@ TEST_SUITE("ENGINE")
         Engine::InitState(&state, 3, 3, NULL);
         Engine::InitKernel(&kernel, Kernels::full);
 
-        // 0 1 2
-        // 3 4 5
-        // 6 7 8
+        auto activation = [](float x)
+        {
+            return x;
+        };
 
+        // 0 0 0
+        // 0 1 0
+        // 0 0 0
         state.current[4] = 1.0f;
 
-        Engine::Epoch(&state, &kernel, Activations::identity);
+        const int length = 9;
+        std::array<float, 9> result = {
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f};
 
-        for (int i = 0; i < 9; i++)
+        Engine::Epoch(&state, &kernel, activation, false);
+
+        for (int i = 0; i < length; i++)
         {
-            CHECK(state.current[i] == doctest::Approx(1.0));
+            INFO("element: ", i);
+            CHECK(state.current[i] == doctest::Approx(result[i]));
+        }
+
+        Engine::DestroyState(&state);
+        Engine::DestroyKernel(&kernel);
+    }
+
+    TEST_CASE("ENGINE - convolution (corner w/ recursion)")
+    {
+        State state;
+        Kernel kernel;
+
+        Engine::InitState(&state, 3, 3, NULL);
+        Engine::InitKernel(&kernel, Kernels::full);
+
+        auto activation = [](float x)
+        {
+            return x;
+        };
+
+        // 1 0 0
+        // 0 0 0
+        // 0 0 0
+        state.current[0] = 1.0f;
+
+        const int length = 9;
+        std::array<float, 9> result = {
+            1.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f};
+
+        Engine::Epoch(&state, &kernel, activation, false);
+
+        for (int i = 0; i < length; i++)
+        {
+            INFO("element: ", i);
+            CHECK(state.current[i] == doctest::Approx(result[i]));
+        }
+
+        Engine::DestroyState(&state);
+        Engine::DestroyKernel(&kernel);
+    }
+
+    TEST_CASE("ENGINE - convolution (corner w recursion)")
+    {
+        State state;
+        Kernel kernel;
+
+        Engine::InitState(&state, 3, 3, NULL);
+        Engine::InitKernel(&kernel, Kernels::full);
+
+        auto activation = [](float x)
+        {
+            return x;
+        };
+
+        // 1 0 0
+        // 0 0 0
+        // 0 0 0
+        state.current[0] = 1.0f;
+
+        const int length = 9;
+        std::array<float, 9> result = {
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f};
+
+        Engine::Epoch(&state, &kernel, activation, true);
+
+        for (int i = 0; i < length; i++)
+        {
+            INFO("element: ", i);
+            CHECK(state.current[i] == doctest::Approx(result[i]));
         }
 
         Engine::DestroyState(&state);
