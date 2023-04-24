@@ -20,8 +20,8 @@ add_library(${PROJECT_NAME} STATIC ${FILES})
 # link OpenMP
 if(OpenMP_CXX_FOUND)
     MESSAGE("Using OpenMP")
-    add_compile_definitions(OPENMP=${USE_OPENMP})
-    add_compile_options(/openmp)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE OPENMP=1)
+    target_compile_options(${PROJECT_NAME} PRIVATE /openmp)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 endif()
 

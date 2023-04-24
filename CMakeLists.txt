@@ -10,9 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(library)
 
-# sets release flag (useful for now?)
-# set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-
 if(${BUILD_TESTS})
     include(CTest)
     add_subdirectory(tests)

@@ -17,7 +17,11 @@
 
 #include <string>
 
-// #include <chrono>
+#define TIME
+
+#ifdef TIME
+#include <chrono>
+#endif
 
 #define assert(x, msg)                                   \
     {                                                    \
@@ -108,17 +112,17 @@ int main(int argc, char *argv[])
         {
             display.draw(state.current);
 
-            // #ifdef _DEBUG
-            // auto t1 = std::chrono::high_resolution_clock::now();
-            // #endif _DEBUG
+#ifdef TIME
+            auto t1 = std::chrono::high_resolution_clock::now();
+#endif
 
             Engine::Epoch(&state, &kernel, Activations::clip, args.recursive);
 
-            // #ifdef _DEBUG
-            // auto t2 = std::chrono::high_resolution_clock::now();
-            // std::chrono::duration<double, std::milli> ms = t2 - t1;
-            // printf("%f ms\n", ms.count());
-            // #endif
+#ifdef TIME
+            auto t2 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> ms = t2 - t1;
+            printf("%f ms\n", ms.count());
+#endif
         }
     }
 

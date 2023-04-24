@@ -56,14 +56,15 @@ void Engine::DestroyKernel(Kernel *kernel)
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
 
-// iterate over state array
+    int kernel_center = kernel->size / 2;
+
 #ifdef OPENMP
 #pragma omp parallel for
 #endif
+    // iterate over state array
     for (int row = 0; row < state->height; row++)
     {
         // definitons inside first loop for parallelization
-        int kernel_center = kernel->size / 2;
         int array_y = 0;
         int array_x = 0;
         float sum = 0.0f;
@@ -95,11 +96,8 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
                     }
                     else
                     {
-                        // overflow y
-                        if (array_y < 0 || array_y >= state->height)
-                            continue; // add nothing
-                        // overflow x
-                        if (array_x < 0 || array_x >= state->width)
+                        // overflow on y or x
+                        if (array_y < 0 || array_y >= state->height || array_x < 0 || array_x >= state->width)
                             continue; // add nothing
                     }
 
