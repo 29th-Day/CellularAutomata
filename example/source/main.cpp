@@ -15,6 +15,8 @@
 #include "engine.h"
 #include "display.h"
 
+#include <string>
+
 // #include <chrono>
 
 #define assert(x, msg)                                   \
@@ -52,18 +54,18 @@ struct Arguments
 
 void parseArgs(int argc, char **argv, Arguments *args)
 {
-    for (int i = 1; i < argc; i += 2)
+    for (int i = 1; i < argc; i++)
     {
         if (EQUAL_S(argv[i], "-h"))
-            args->height = atoi(argv[i + 1]);
+            args->height = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-w"))
-            args->width = atoi(argv[i + 1]);
+            args->width = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-s"))
-            args->scale = atoi(argv[i + 1]);
+            args->scale = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-fps"))
-            args->fps = atoi(argv[i + 1]);
+            args->fps = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-seed"))
-            args->seed = atoi(argv[i + 1]);
+            args->seed = std::stoul(argv[++i]);
         else if (EQUAL_S(argv[i], "-r"))
             args->recursive = true;
     }
@@ -87,7 +89,7 @@ int main(int argc, char *argv[])
     State state;
     Kernel kernel;
 
-    Engine::InitState(&state, args.height, args.width, States::randb);
+    Engine::InitState(&state, args.height, args.width, States::randf);
     Engine::InitKernel(&kernel, Kernels::rand);
 
     print2D(kernel.kernel, kernel.size, kernel.size);
