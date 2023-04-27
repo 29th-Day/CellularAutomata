@@ -17,9 +17,11 @@ set(FILES
 # build static library
 add_library(${PROJECT_NAME} STATIC ${FILES})
 
+# target_compile_options(${PROJECT_NAME} PRIVATE /Qpar /Qpar-report:2)
+
 # link OpenMP
-if(OpenMP_CXX_FOUND)
-    MESSAGE("Using OpenMP")
+if(${OpenMP_CXX_FOUND})
+    MESSAGE(STATUS "Using OpenMP (CXX Version ${OpenMP_CXX_VERSION})")
     target_compile_definitions(${PROJECT_NAME} PRIVATE OPENMP=1)
     target_compile_options(${PROJECT_NAME} PRIVATE /openmp)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)

@@ -93,15 +93,15 @@ int main(int argc, char *argv[])
     State state;
     Kernel kernel;
 
-    Engine::InitState(&state, args.height, args.width, States::randf);
-    Engine::InitKernel(&kernel, Kernels::rand);
+    Engine::InitState(&state, args.height, args.width, NULL);
+    Engine::InitKernel(&kernel, Kernels::life);
 
     print2D(kernel.kernel, kernel.size, kernel.size);
 
-    // States::Objects::Glider(&state, 50, 40, States::Objects::UP_LEFT);
-    // States::Objects::Glider(&state, 50, 50, States::Objects::UP_RIGHT);
-    // States::Objects::Glider(&state, 60, 40, States::Objects::DOWN_RIGHT);
-    // States::Objects::Glider(&state, 60, 50, States::Objects::DOWN_LEFT);
+    States::Objects::Glider(&state, 50, 40, States::Objects::UP_LEFT);
+    States::Objects::Glider(&state, 50, 50, States::Objects::UP_RIGHT);
+    States::Objects::Glider(&state, 60, 40, States::Objects::DOWN_RIGHT);
+    States::Objects::Glider(&state, 60, 50, States::Objects::DOWN_LEFT);
 
     // MAIN PART
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
             auto t1 = std::chrono::high_resolution_clock::now();
 #endif
 
-            Engine::Epoch(&state, &kernel, Activations::clip, args.recursive);
+            Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
 
 #ifdef TIME
             auto t2 = std::chrono::high_resolution_clock::now();

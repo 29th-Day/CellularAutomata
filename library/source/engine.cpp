@@ -56,7 +56,7 @@ void Engine::DestroyKernel(Kernel *kernel)
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
 
-    int kernel_center = kernel->size / 2;
+    int kernel_radius = kernel->size / 2;
 
 #ifdef OPENMP
 #pragma omp parallel for
@@ -78,8 +78,8 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
                 for (int x = 0; x < kernel->size; x++)
                 {
                     // calculate state array positions
-                    array_y = row + (y - kernel_center);
-                    array_x = col + (x - kernel_center);
+                    array_y = row + (y - kernel_radius);
+                    array_x = col + (x - kernel_radius);
 
                     if (recursive)
                     {
