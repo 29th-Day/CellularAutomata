@@ -1,6 +1,6 @@
-#include "engine.h"
-#include "common.h"
-#include "rng.h"
+#ifdef BASE
+
+#include "CellularAutomata.h"
 
 #include <stdlib.h>
 
@@ -8,12 +8,7 @@
 #include <omp.h>
 #endif
 
-unsigned int Engine::InitRandom(unsigned int seed)
-{
-    return RNG::seed(seed);
-}
-
-void Engine::InitState(State *state, int height, int width, state_func f)
+void CellularAutomata::InitState(State *state, unsigned int height, unsigned int width, state_func f)
 {
     state->height = height;
     state->width = width;
@@ -23,7 +18,7 @@ void Engine::InitState(State *state, int height, int width, state_func f)
         f(state);
 }
 
-void Engine::DestroyState(State *state)
+void CellularAutomata::DestroyState(State *state)
 {
     delete[] state->current;
     state->current = nullptr;
@@ -33,19 +28,23 @@ void Engine::DestroyState(State *state)
     state->width = 0;
 }
 
-void Engine::InitKernel(Kernel *kernel, kernel_func f)
+void CellularAutomata::InitKernel(Kernel *kernel, unsigned int kernelSize, kernel_func f)
 {
-    f(kernel);
+    kernel->kernel = new float[kernelSize * kernelSize]();
+    kernel->size = kernelSize;
+
+    if (f != NULL)
+        f(kernel);
 }
 
-void Engine::DestroyKernel(Kernel *kernel)
+void CellularAutomata::DestroyKernel(Kernel *kernel)
 {
     delete[] kernel->kernel;
     kernel->kernel = nullptr;
     kernel->size = 0;
 }
 
-void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
+void CellularAutomata::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
     int kernel_radius = kernel->size / 2;
 
@@ -104,3 +103,5 @@ void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursi
     // swap
     SWAP(state->current, state->next);
 }
+
+#endif

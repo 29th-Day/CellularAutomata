@@ -1,5 +1,5 @@
 /**
- * @file engine.h
+ * @file CellularAutomata.h
  * @author 29th-Day (https://github.com/29th-Day)
  *
  * @copyright Copyright (c) 2023
@@ -9,13 +9,14 @@
 
 #pragma once
 
+// include all to be accessible from outside
 #include "common.h"
 #include "rng.h"
 #include "states.h"
 #include "kernels.h"
 #include "activations.h"
 
-namespace Engine
+namespace CellularAutomata
 {
     /**
      * @brief Initializes RNG
@@ -23,7 +24,7 @@ namespace Engine
      * @param seed RNG seed
      * @return used seed
      */
-    unsigned int InitRandom(unsigned int seed);
+    inline unsigned int InitRandom(unsigned int seed) { return RNG::seed(seed); }
 
     /**
      * @brief Initializes a state
@@ -33,7 +34,7 @@ namespace Engine
      * @param width width of the world
      * @param f function for initialising the world. May be NULL
      */
-    void InitState(State *state, int height, int width, state_func f);
+    void InitState(State *state, unsigned int height, unsigned int width, state_func f);
 
     /**
      * @brief Destroy state
@@ -46,9 +47,10 @@ namespace Engine
      * @brief Initializes a kernel
      * @details description
      * @param kernel reference to a kernel
+     * @param kernelSize length of kernel side
      * @param f function for initialising the kernel
      */
-    void InitKernel(Kernel *kernel, kernel_func f);
+    void InitKernel(Kernel *kernel, unsigned int kernelSize, kernel_func f);
 
     /**
      * @brief Destroy kernel

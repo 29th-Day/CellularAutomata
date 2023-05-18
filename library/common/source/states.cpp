@@ -11,6 +11,8 @@ void States::randb(State *state)
     {
         if (RNG::number(0, 1))
             state->current[i] = 1.0f;
+        else
+            state->current[i] = 0.0f;
     }
 }
 
@@ -41,39 +43,39 @@ void States::Objects::Glider(State *state, int x, int y, Direction type)
 {
     switch (type)
     {
-    case Direction::DOWN_RIGHT:
+    case Direction::NE:
     {
         float glider[3 * 3]{
             0, 1, 0,
             0, 0, 1,
-            1, 1, 1 };
+            1, 1, 1};
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
-    case Direction::DOWN_LEFT:
+    case Direction::SE:
     {
         float glider[3 * 3]{
             0, 1, 0,
             1, 0, 0,
-            1, 1, 1 };
+            1, 1, 1};
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
-    case Direction::UP_RIGHT:
+    case Direction::SW:
     {
         float glider[3 * 3]{
             1, 1, 1,
             0, 0, 1,
-            0, 1, 0 };
+            0, 1, 0};
         copy_into(glider, 3, 3, state, x, y);
         return;
     }
-    case Direction::UP_LEFT:
+    case Direction::NW:
     {
         float glider[3 * 3]{
             1, 1, 1,
             1, 0, 0,
-            0, 1, 0 };
+            0, 1, 0};
         copy_into(glider, 3, 3, state, x, y);
         return;
     }

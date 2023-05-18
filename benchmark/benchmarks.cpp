@@ -1,5 +1,5 @@
 
-#include "engine.h"
+#include "CellularAutomata.h"
 
 #include <benchmark/benchmark.h>
 
@@ -7,7 +7,7 @@
 
 static void Epoch(benchmark::State &state)
 {
-    Engine::InitRandom(42);
+    CellularAutomata::InitRandom(42);
 
     unsigned int height = (unsigned int)state.range(0);
     unsigned int width = (unsigned int)state.range(0);
@@ -18,16 +18,16 @@ static void Epoch(benchmark::State &state)
     State world;
     Kernel kernel;
 
-    Engine::InitState(&world, height, width, States::randf);
-    Engine::InitKernel(&kernel, Kernels::rand);
+    CellularAutomata::InitState(&world, height, width, States::randf);
+    CellularAutomata::InitKernel(&kernel, 3, Kernels::rand);
 
     for (auto _ : state)
     {
-        Engine::Epoch(&world, &kernel, Activations::clip, recursive);
+        CellularAutomata::Epoch(&world, &kernel, Activations::clip, recursive);
     }
 
-    Engine::DestroyState(&world);
-    Engine::DestroyKernel(&kernel);
+    CellularAutomata::DestroyState(&world);
+    CellularAutomata::DestroyKernel(&kernel);
 }
 
 // Register the function as a benchmark

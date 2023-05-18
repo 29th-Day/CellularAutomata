@@ -1,20 +1,15 @@
-#include "activations.h"
+#ifdef CUDA
 
-#include <cmath>
+#include "activations.h"
 
 #define EULER_NUMBER_F 2.71828182846f
 
-float Activations::identity(float x)
+__device__ float Activations::sigmoid(float x)
 {
-    return x;
+    return (1 / (1 + pow(EULER_NUMBER_F, -x)));
 }
 
-float Activations::sigmoid(float x)
-{
-    return (1 / (1 + std::powf(EULER_NUMBER_F, -x)));
-}
-
-float Activations::life(float x)
+__device__ float Activations::life(float x)
 {
     int neighbors = (int)x;
     bool alive = (x - neighbors) > 0.1;
@@ -33,7 +28,7 @@ float Activations::life(float x)
     }
 }
 
-float Activations::clip(float x)
+__device__ float Activations::clip(float x)
 {
     if (x < 0.0f)
         return 0.0f;
@@ -43,17 +38,19 @@ float Activations::clip(float x)
         return x;
 }
 
-float Activations::sin(float x)
+__device__ float Activations::sin(float x)
 {
-    return std::sin(x);
+    return sin(x);
 }
 
-float Activations::cos(float x)
+__device__ float Activations::cos(float x)
 {
-    return std::cos(x);
+    return cos(x);
 }
 
-float Activations::tan(float x)
+__device__ float Activations::tan(float x)
 {
-    return std::tan(x);
+    return tan(x);
 }
+
+#endif

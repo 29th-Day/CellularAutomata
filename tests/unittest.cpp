@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
-#include "engine.h"
+#include "CellularAutomata.h"
 
 #include <array>
 
@@ -45,7 +45,7 @@ TEST_SUITE("STATES")
     TEST_CASE("STATES - init / destroy")
     {
         State state;
-        Engine::InitState(&state, 100, 100, NULL);
+        CellularAutomata::InitState(&state, 100, 100, NULL);
         CHECK(state.height == 100);
         CHECK(state.width == 100);
         CHECK(state.current != nullptr);
@@ -56,7 +56,7 @@ TEST_SUITE("STATES")
         state.current[MAX] = 2.0f;
         CHECK(state.current[MAX] == 2.0f);
 
-        Engine::DestroyState(&state);
+        CellularAutomata::DestroyState(&state);
         CHECK(state.height == 0);
         CHECK(state.width == 0);
         CHECK(state.current == nullptr);
@@ -71,7 +71,7 @@ TEST_SUITE("KERNELS")
     TEST_CASE("KERNELS - init / destroy")
     {
         Kernel kernel;
-        Engine::InitKernel(&kernel, Kernels::full);
+        CellularAutomata::InitKernel(&kernel, 3, Kernels::full);
         CHECK(kernel.size != 0);
         CHECK(kernel.kernel != nullptr);
         CHECK(kernel.kernel[0] == 1.0f);
@@ -80,7 +80,7 @@ TEST_SUITE("KERNELS")
         kernel.kernel[MAX] = 2.0f;
         CHECK(kernel.kernel[MAX] == 2.0f);
 
-        Engine::DestroyKernel(&kernel);
+        CellularAutomata::DestroyKernel(&kernel);
         CHECK(kernel.size == 0);
         CHECK(kernel.kernel == nullptr);
     }
@@ -92,14 +92,6 @@ TEST_SUITE("ACTIVATIONS")
 {
     const int length = 10;
     std::array<float, length> x = {-10.0f, -3.0f, -1.0f, 0.0f, 0.5f, 1.0f, 3.1415f, 5.0f, 9.0f, 100.0f};
-
-    TEST_CASE("ACTIVATIONS - identity")
-    {
-        for (int i = 0; i < length; i++)
-        {
-            CHECK(Activations::identity(x[i]) == doctest::Approx(x[i]));
-        }
-    }
 
     TEST_CASE("ACTIVATIONS - sigmoid")
     {
@@ -133,8 +125,8 @@ TEST_SUITE("ENGINE")
         State state;
         Kernel kernel;
 
-        Engine::InitState(&state, 3, 3, NULL);
-        Engine::InitKernel(&kernel, Kernels::full);
+        CellularAutomata::InitState(&state, 3, 3, NULL);
+        CellularAutomata::InitKernel(&kernel, 3, Kernels::full);
 
         auto activation = [](float x)
         {
@@ -152,7 +144,7 @@ TEST_SUITE("ENGINE")
             1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f};
 
-        Engine::Epoch(&state, &kernel, activation, false);
+        CellularAutomata::Epoch(&state, &kernel, activation, false);
 
         for (int i = 0; i < length; i++)
         {
@@ -160,8 +152,8 @@ TEST_SUITE("ENGINE")
             CHECK(state.current[i] == doctest::Approx(result[i]));
         }
 
-        Engine::DestroyState(&state);
-        Engine::DestroyKernel(&kernel);
+        CellularAutomata::DestroyState(&state);
+        CellularAutomata::DestroyKernel(&kernel);
     }
 
     TEST_CASE("ENGINE - convolution (corner w/ recursion)")
@@ -169,8 +161,8 @@ TEST_SUITE("ENGINE")
         State state;
         Kernel kernel;
 
-        Engine::InitState(&state, 3, 3, NULL);
-        Engine::InitKernel(&kernel, Kernels::full);
+        CellularAutomata::InitState(&state, 3, 3, NULL);
+        CellularAutomata::InitKernel(&kernel, 3, Kernels::full);
 
         auto activation = [](float x)
         {
@@ -188,7 +180,7 @@ TEST_SUITE("ENGINE")
             1.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f};
 
-        Engine::Epoch(&state, &kernel, activation, false);
+        CellularAutomata::Epoch(&state, &kernel, activation, false);
 
         for (int i = 0; i < length; i++)
         {
@@ -196,8 +188,8 @@ TEST_SUITE("ENGINE")
             CHECK(state.current[i] == doctest::Approx(result[i]));
         }
 
-        Engine::DestroyState(&state);
-        Engine::DestroyKernel(&kernel);
+        CellularAutomata::DestroyState(&state);
+        CellularAutomata::DestroyKernel(&kernel);
     }
 
     TEST_CASE("ENGINE - convolution (corner w recursion)")
@@ -205,8 +197,8 @@ TEST_SUITE("ENGINE")
         State state;
         Kernel kernel;
 
-        Engine::InitState(&state, 3, 3, NULL);
-        Engine::InitKernel(&kernel, Kernels::full);
+        CellularAutomata::InitState(&state, 3, 3, NULL);
+        CellularAutomata::InitKernel(&kernel, 3, Kernels::full);
 
         auto activation = [](float x)
         {
@@ -224,7 +216,7 @@ TEST_SUITE("ENGINE")
             1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f};
 
-        Engine::Epoch(&state, &kernel, activation, true);
+        CellularAutomata::Epoch(&state, &kernel, activation, true);
 
         for (int i = 0; i < length; i++)
         {
@@ -232,7 +224,7 @@ TEST_SUITE("ENGINE")
             CHECK(state.current[i] == doctest::Approx(result[i]));
         }
 
-        Engine::DestroyState(&state);
-        Engine::DestroyKernel(&kernel);
+        CellularAutomata::DestroyState(&state);
+        CellularAutomata::DestroyKernel(&kernel);
     }
 }
