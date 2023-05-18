@@ -19,3 +19,10 @@ typedef void (*kernel_func)(Kernel *);
 typedef void (*state_func)(State *);
 
 typedef float (*activation_func)(float);
+
+#define SWAP(a, b)     \
+    {                  \
+        auto temp = b; \
+        b = a;         \
+        a = temp;      \
+    }

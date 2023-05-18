@@ -31,7 +31,7 @@ static void Epoch(benchmark::State &state)
 }
 
 // Register the function as a benchmark
-BENCHMARK(Epoch)->DenseRange(100, 500, 100)->Complexity()->Unit(benchmark::kMillisecond)->Repetitions(10)->DisplayAggregatesOnly(true);
+BENCHMARK(Epoch)->DenseRange(100, 2000, 100)->Complexity()->Unit(benchmark::kMillisecond)->Repetitions(10)->DisplayAggregatesOnly(true);
 
 // Run the benchmark
 BENCHMARK_MAIN();

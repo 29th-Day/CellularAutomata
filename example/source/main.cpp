@@ -105,25 +105,30 @@ int main(int argc, char *argv[])
 
     // MAIN PART
 
-    Display display = Display(args.height, args.width, args.scale, args.fps);
-    while (display.run())
+    //     Display display = Display(args.height, args.width, args.scale, args.fps);
+    //     while (display.run())
+    //     {
+    //         if (display.nextFrame())
+    //         {
+    //             display.draw(state.current);
+
+    // #ifdef TIME
+    //             auto t1 = std::chrono::high_resolution_clock::now();
+    // #endif
+
+    //             Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
+
+    // #ifdef TIME
+    //             auto t2 = std::chrono::high_resolution_clock::now();
+    //             std::chrono::duration<double, std::milli> ms = t2 - t1;
+    //             printf("%f ms\n", ms.count());
+    // #endif
+    //         }
+    //     }
+
+    for (int i = 0; i < 10000; i++)
     {
-        if (display.nextFrame())
-        {
-            display.draw(state.current);
-
-#ifdef TIME
-            auto t1 = std::chrono::high_resolution_clock::now();
-#endif
-
-            Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
-
-#ifdef TIME
-            auto t2 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> ms = t2 - t1;
-            printf("%f ms\n", ms.count());
-#endif
-        }
+        Engine::Epoch(&state, &kernel, Activations::life, args.recursive);
     }
 
     Engine::DestroyState(&state);

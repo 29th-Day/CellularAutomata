@@ -5,6 +5,9 @@ if(${USE_OPENMP})
     find_package(OpenMP REQUIRED)
 endif()
 
+# find_package(CUDAToolkit REQUIRED)
+# MESSAGE(STATUS "Using CUDA (Version ${CUDAToolkit_VERSION})")
+
 # source files
 set(FILES
     source/engine.cpp
@@ -17,7 +20,7 @@ set(FILES
 # build static library
 add_library(${PROJECT_NAME} STATIC ${FILES})
 
-# target_compile_options(${PROJECT_NAME} PRIVATE /Qpar /Qpar-report:2)
+target_compile_options(${PROJECT_NAME} PRIVATE /Qpar /Qpar-report:2)
 
 # link OpenMP
 if(${OpenMP_CXX_FOUND})

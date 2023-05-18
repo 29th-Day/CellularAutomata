@@ -3,18 +3,10 @@
 #include "rng.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #ifdef OPENMP
 #include <omp.h>
 #endif
-
-#define SWAP(a, b)     \
-    {                  \
-        auto temp = b; \
-        b = a;         \
-        a = temp;      \
-    }
 
 unsigned int Engine::InitRandom(unsigned int seed)
 {
@@ -55,12 +47,9 @@ void Engine::DestroyKernel(Kernel *kernel)
 
 void Engine::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
-
     int kernel_radius = kernel->size / 2;
 
-#ifdef OPENMP
 #pragma omp parallel for
-#endif
     // iterate over state array
     for (int row = 0; row < state->height; row++)
     {
