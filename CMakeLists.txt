@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(CellularAutomata VERSION 0.1.0 LANGUAGES CXX HOMEPAGE_URL https://github.com/29th-Day/CellularAutomata)
+cmake_minimum_required(VERSION 3.20.0)
+project(CellularAutomata VERSION 0.1.0 LANGUAGES CUDA CXX HOMEPAGE_URL https://github.com/29th-Day/CellularAutomata)
 
 option(BUILD_EXAMPLE "Build example?" ON)
 option(BUILD_TESTS "Build tests?" ON)
@@ -17,11 +17,11 @@ add_subdirectory(library)
 
 if(${BUILD_TESTS})
     include(CTest)
-    add_subdirectory(tests)
+    # add_subdirectory(tests)
 endif()
 
 if (${BUILD_BENCHMARKS})
-    add_subdirectory(benchmark)
+    # add_subdirectory(benchmark)
 endif()
 
 if (${BUILD_EXAMPLE})

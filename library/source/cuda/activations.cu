@@ -2,11 +2,15 @@
 
 #include "activations.h"
 
+#include <math.h>
+
+#include <cuda_runtime.h>
+
 #define EULER_NUMBER_F 2.71828182846f
 
 __device__ float Activations::sigmoid(float x)
 {
-    return (1 / (1 + pow(EULER_NUMBER_F, -x)));
+    return (1 / (1 + powf(EULER_NUMBER_F, -x)));
 }
 
 __device__ float Activations::life(float x)
@@ -40,17 +44,17 @@ __device__ float Activations::clip(float x)
 
 __device__ float Activations::sin(float x)
 {
-    return sin(x);
+    return sinf(x);
 }
 
 __device__ float Activations::cos(float x)
 {
-    return cos(x);
+    return cosf(x);
 }
 
 __device__ float Activations::tan(float x)
 {
-    return tan(x);
+    return tanf(x);
 }
 
 #endif
