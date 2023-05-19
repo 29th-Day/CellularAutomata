@@ -5,9 +5,9 @@ set(TARGET ${PROJECT_NAME})
 # USE_CUDA is always stronger
 
 set(COMMON_FILES
-    common/source/rng.cpp
-    common/source/kernels.cpp
-    common/source/states.cpp
+    source/rng.cpp
+    source/kernels.cpp
+    source/states.cpp
 )
 
 if (${USE_CUDA})
@@ -19,8 +19,8 @@ if (${USE_CUDA})
 
     # source files
     set(FILES
-        cuda/engine.cu
-        cuda/activations.cu
+        source/cuda/engine.cu
+        source/cuda/activations.cu
     )
 
     # build static library
@@ -35,8 +35,8 @@ else()
 
     # source files
     set(FILES
-        base/engine.cpp
-        base/activations.cpp
+        source/base/engine.cpp
+        source/base/activations.cpp
     )
 
     # build static library
@@ -54,4 +54,4 @@ else()
 endif()
 
 # include header files (public so the others can access it (?))
-target_include_directories(${TARGET} PUBLIC common/include)
+target_include_directories(${TARGET} PUBLIC include)
