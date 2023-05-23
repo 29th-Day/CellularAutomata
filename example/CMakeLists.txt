@@ -22,14 +22,16 @@ target_include_directories(${TARGET} PRIVATE include)
 
 if(${USE_CUDA})
     target_include_directories(${TARGET} PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-    # target_link_libraries(${TARGET} PRIVATE ${CUDAToolkit_})
+
+    target_link_libraries(${TARGET} PRIVATE CUDA::cudart_static)
+
+    target_link_libraries(${TARGET} PRIVATE ${CUDAToolkit_LIBRARIES})
 endif()
 
 set_target_properties(${TARGET} PROPERTIES
         CUDA_ARCHITECTURES ${CUDA_ARCH} # defined in main CMake file
         CUDA_STANDARD 17
-        CUDA_SEPARABLE_COMPILATION ON
-    )
+)
 
 # link SDL
 target_link_libraries(${TARGET}
@@ -40,3 +42,8 @@ target_link_libraries(${TARGET}
 
 # link CellularAutomata
 target_link_libraries(${TARGET} PRIVATE ${PROJECT_NAME})
+
+# Add the /NODEFAULTLIB:LIBCMT linker option
+if(${USE_CUDA} AND MSVC)
+  target_link_options(${TARGET} PRIVATE /NODEFAULTLIB:LIBCMT)
+endif()

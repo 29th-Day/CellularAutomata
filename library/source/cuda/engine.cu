@@ -1,8 +1,7 @@
-#ifdef CUDA
-
 #include "CellularAutomata.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <cuda_runtime.h>
 
@@ -12,6 +11,8 @@
 #define CPU cudaCpuDeviceId
 
 // CUDA Kernels
+
+#define cudaCheck(a) {if (a != cudaSuccess) {printf("CUDA error (%i): %s\n", __LINE__, cudaGetErrorString(cudaGetLastError()));}}
 
 __global__ void convolution(const float *__restrict__ input, const float *__restrict__ kernel, float *output, activation_func fn, const int iHeight, const int iWidth, const int kSize)
 {
@@ -42,7 +43,6 @@ __global__ void convolution(const float *__restrict__ input, const float *__rest
     };
 
     // cudaPrint4(rect);
-
 
     // Because of halo / padding, each thread has to load multiple elements
     for (int i = tid; i < memSize; i += threadsPerBlock)
@@ -75,6 +75,8 @@ __global__ void convolution(const float *__restrict__ input, const float *__rest
     }
 
     __syncthreads();
+
+    
 
     // Compute kernel
 
@@ -138,12 +140,15 @@ void CellularAutomata::DestroyKernel(Kernel *kernel)
 
 void CellularAutomata::Epoch(State *state, Kernel *kernel, activation_func f, bool recursive)
 {
-    size_t bytes_matrix = state->height * state->width * sizeof(float);
-    size_t bytes_kernel = kernel->size * kernel->size * sizeof(float);
+    // size_t bytes_matrix = state->height * state->width * sizeof(float);
+    // size_t bytes_kernel = kernel->size * kernel->size * sizeof(float);
 
-    cudaMemPrefetchAsync(state->current, bytes_matrix, GPU);
-    cudaMemPrefetchAsync(state->next, bytes_matrix, GPU);
-    cudaMemPrefetchAsync(kernel->kernel, bytes_kernel, GPU);
+    // cudaCheck(cudaMemPrefetchAsync(state->current, bytes_matrix, GPU));
+    // cudaCheck(cudaMemPrefetchAsync(state->next, bytes_matrix, GPU));
+    // cudaCheck(cudaMemPrefetchAsync(kernel->kernel, bytes_kernel, GPU));
+
+    // printf("code (before): %s\n", cudaGetErrorString(cudaGetLastError()));
+
 
     dim3 grid(((state->width - 1) / TILE_SIZE) + 1, ((state->height - 1) / TILE_SIZE) + 1);
     dim3 block(TILE_SIZE, TILE_SIZE);
@@ -151,7 +156,12 @@ void CellularAutomata::Epoch(State *state, Kernel *kernel, activation_func f, bo
 
     convolution<<<grid, block, memSize>>>(state->current, kernel->kernel, state->next, f, state->height, state->width, kernel->size);
 
-    cudaDeviceSynchronize();
-}
 
-#endif
+    // cudaDeviceSynchronize();
+
+    // test<<<1, 10>>>();
+
+    cudaCheck(cudaDeviceSynchronize());
+
+    // printf("code (after): %s\n", cudaGetErrorString(cudaGetLastError()));
+}

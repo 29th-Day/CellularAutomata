@@ -1,5 +1,3 @@
-#ifdef BASE
-
 #include "CellularAutomata.h"
 
 #include <stdlib.h>
@@ -103,5 +101,3 @@ void CellularAutomata::Epoch(State *state, Kernel *kernel, activation_func f, bo
     // swap
     SWAP(state->current, state->next);
 }
-
-#endif

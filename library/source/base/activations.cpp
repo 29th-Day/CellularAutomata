@@ -1,5 +1,3 @@
-#ifdef BASE
-
 #include "activations.h"
 
 #include <cmath>
@@ -54,5 +52,3 @@ float Activations::tan(float x)
 {
     return std::tan(x);
 }
-
-#endif

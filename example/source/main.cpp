@@ -98,38 +98,38 @@ int main(int argc, char *argv[])
 
     print2D(kernel.kernel, kernel.size, kernel.size);
 
-    States::Objects::Glider(&state, 50, 40, States::Objects::NW);
-    States::Objects::Glider(&state, 50, 50, States::Objects::SW);
-    States::Objects::Glider(&state, 60, 40, States::Objects::NE);
-    States::Objects::Glider(&state, 60, 50, States::Objects::SE);
+    States::Objects::Glider(&state, 5, 5, States::Objects::NW);
+    // States::Objects::Glider(&state, 50, 50, States::Objects::SW);
+    // States::Objects::Glider(&state, 60, 40, States::Objects::NE);
+    // States::Objects::Glider(&state, 60, 50, States::Objects::SE);
 
     // MAIN PART
 
-    Display display = Display(args.height, args.width, args.scale, args.fps);
-    while (display.run())
+    //     Display display = Display(args.height, args.width, args.scale, args.fps);
+    //     while (display.run())
+    //     {
+    //         if (display.nextFrame())
+    //         {
+    //             display.draw(state.current);
+
+    // #ifdef TIME
+    //             auto t1 = std::chrono::high_resolution_clock::now();
+    // #endif
+
+    //             CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
+
+    // #ifdef TIME
+    //             auto t2 = std::chrono::high_resolution_clock::now();
+    //             std::chrono::duration<double, std::milli> ms = t2 - t1;
+    //             printf("%f ms\n", ms.count());
+    // #endif
+    //         }
+    //     }
+
+    for (int i = 0; i < 5; i++)
     {
-        if (display.nextFrame())
-        {
-            display.draw(state.current);
-
-#ifdef TIME
-            auto t1 = std::chrono::high_resolution_clock::now();
-#endif
-
-            CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
-
-#ifdef TIME
-            auto t2 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> ms = t2 - t1;
-            printf("%f ms\n", ms.count());
-#endif
-        }
+        CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
     }
-
-    // for (int i = 0; i < 10000; i++)
-    // {
-    //     CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
-    // }
 
     CellularAutomata::DestroyState(&state);
     CellularAutomata::DestroyKernel(&kernel);

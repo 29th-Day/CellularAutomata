@@ -1,5 +1,3 @@
-#ifdef CUDA
-
 #include "activations.h"
 
 #include <math.h>
@@ -56,5 +54,3 @@ __device__ float Activations::tan(float x)
 {
     return tanf(x);
 }
-
-#endif

@@ -13,7 +13,6 @@ set(COMMON_FILES
 if (${USE_CUDA})
     # CUDA build path
 
-    enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
     MESSAGE(STATUS "Using CUDAToolkit (${CUDAToolkit_VERSION})")
 
@@ -31,13 +30,7 @@ if (${USE_CUDA})
     set_target_properties(${TARGET} PROPERTIES
         CUDA_ARCHITECTURES ${CUDA_ARCH} # defined in main CMake file
         CUDA_STANDARD 17
-        CUDA_SEPARABLE_COMPILATION ON
     )
-    
-    target_compile_features(${TARGET} PUBLIC cxx_std_17)
-
-    # include CUDA headers
-    target_include_directories(${TARGET} PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
 else()
     # Baseline / OMP build path
 
@@ -49,8 +42,6 @@ else()
 
     # build static library
     add_library(${TARGET} STATIC ${FILES} ${COMMON_FILES})
-
-    target_compile_definitions(${TARGET} PRIVATE BASE=1)
 
     # link OpenMP
     if(${USE_OPENMP})
@@ -64,3 +55,5 @@ endif()
 
 # include header files (public so the others can access it (?))
 target_include_directories(${TARGET} PUBLIC include)
+
+target_compile_features(${TARGET} PUBLIC cxx_std_17)
