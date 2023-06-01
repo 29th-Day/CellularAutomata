@@ -68,4 +68,15 @@ namespace CellularAutomata
      * @param recursive wrap the convolution around the borders of the world ("infinite grid")
      */
     void Epoch(State *state, Kernel *kernel, activation_func f, bool recursive);
+
+#ifdef ENGINE == ENGINE_CUDA
+    /**
+     * @brief Transfer state between devices
+     *
+     * @param to which device to copy to (src is assumed to be opposite)
+     * @param src reference to source state
+     * @param dst reference to destination state
+     */
+    void TransferTo(Device to, const State *src, State *dst);
+#endif
 }

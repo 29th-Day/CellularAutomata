@@ -2,8 +2,6 @@
 
 #include <math.h>
 
-#include <cuda_runtime.h>
-
 #define EULER_NUMBER_F 2.71828182846f
 
 __device__ float Activations::sigmoid(float x)

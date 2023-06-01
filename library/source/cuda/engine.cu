@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <cuda_runtime.h>
-
 #define TILE_SIZE 32
 
 #define GPU 0
@@ -106,10 +104,13 @@ void CellularAutomata::InitState(State *state, unsigned int height, unsigned int
 {
     state->height = height;
     state->width = width;
-    cudaMallocManaged(&state->current, height * width * sizeof(float));
-    cudaMallocManaged(&state->next, height * width * sizeof(float));
+
+    float *temp = new float[height, width]();
+
+    cudaCheck(cudaMalloc(&state->current, height * width * sizeof(float)));
+    cudaCheck(cudaMalloc(&state->next, height * width * sizeof(float)));
     if (f != NULL)
-        f(state);
+        f(temp);
 }
 
 void CellularAutomata::DestroyState(State *state)
@@ -124,7 +125,7 @@ void CellularAutomata::DestroyState(State *state)
 
 void CellularAutomata::InitKernel(Kernel *kernel, unsigned int kernelSize, kernel_func f)
 {
-    cudaMallocManaged(&kernel->kernel, kernelSize * kernelSize * sizeof(float));
+    cudaCheck(cudaMalloc(&kernel->kernel, kernelSize * kernelSize * sizeof(float)));
     kernel->size = kernelSize;
 
     if (f != NULL)
@@ -164,4 +165,18 @@ void CellularAutomata::Epoch(State *state, Kernel *kernel, activation_func f, bo
     cudaCheck(cudaDeviceSynchronize());
 
     // printf("code (after): %s\n", cudaGetErrorString(cudaGetLastError()));
+}
+
+void CellularAutomata::TransferTo(Device to, const State *src, State *dst)
+{
+    // cudaMemcpyKind type = cudaMemcpyDefault;
+
+    // cudaMemcpyKind::cudaMemcpyDefault
+
+    // if (to == Device::CUDA)
+    // {
+    //     type = cudaMemcpyHostToDevice;
+    // }
+
+    cudaMemcpy(dst->current, src->current, src->height * src->width * sizeof(float), cudaMemcpyDefault);
 }

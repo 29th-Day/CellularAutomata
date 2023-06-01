@@ -14,6 +14,12 @@ struct Kernel
     int size;
 };
 
+enum Device
+{
+    CPU,
+    CUDA
+};
+
 typedef void (*kernel_func)(Kernel *);
 
 typedef void (*state_func)(State *);

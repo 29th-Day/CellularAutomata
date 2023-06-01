@@ -3,7 +3,7 @@
 #include "common.h"
 
 // function decoration if CUDA is used to be usable in kernel
-#ifdef CUDA
+#ifdef ENGINE == ENGINE_CUDA
 #include <cuda_runtime.h>
 #define cuda __device__
 #else

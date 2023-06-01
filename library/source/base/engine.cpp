@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#ifdef OPENMP
+#ifdef ENGINE == ENGINE_OMP
 #include <omp.h>
 #endif
 

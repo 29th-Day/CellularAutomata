@@ -2,6 +2,12 @@ MESSAGE("BUILD LIBRARY")
 
 set(TARGET ${PROJECT_NAME})
 
+set(ENGINE_STD 0)
+set(ENGINE_OMP 1)
+set(ENGINE_CUDA 2)
+
+set(ENGINE ${ENGINE_STD})
+
 # USE_CUDA is always stronger
 
 set(COMMON_FILES
@@ -25,7 +31,9 @@ if (${USE_CUDA})
     # build static library
     add_library(${TARGET} STATIC ${FILES} ${COMMON_FILES})
 
-    target_compile_definitions(${TARGET} PRIVATE CUDA=1)
+    # target_compile_definitions(${TARGET} PRIVATE ENGINE=2)
+
+    set(ENGINE ${ENGINE_CUDA})
     
     set_target_properties(${TARGET} PROPERTIES
         CUDA_ARCHITECTURES ${CUDA_ARCH} # defined in main CMake file
@@ -47,11 +55,19 @@ else()
     if(${USE_OPENMP})
         find_package(OpenMP REQUIRED)
         MESSAGE(STATUS "Using OpenMP (CXX Version ${OpenMP_CXX_VERSION})")
-        target_compile_definitions(${TARGET} PRIVATE OPENMP=1)
         target_compile_options(${TARGET} PRIVATE /openmp)
         target_link_libraries(${TARGET} PRIVATE OpenMP::OpenMP_CXX)
+        # target_compile_definitions(${TARGET} PRIVATE ENGINE=1)
+        set(ENGINE ${ENGINE_OMP})
     endif()
 endif()
+
+target_compile_definitions(${TARGET}
+    PRIVATE ENGINE_STD=${ENGINE_STD}
+    PRIVATE ENGINE_OMP=${ENGINE_OMP}
+    PRIVATE ENGINE_CUDA=${ENGINE_CUDA}
+    PRIVATE ENGINE=${ENGINE}
+)
 
 # include header files (public so the others can access it (?))
 target_include_directories(${TARGET} PUBLIC include)
