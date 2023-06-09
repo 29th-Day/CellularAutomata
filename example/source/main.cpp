@@ -10,18 +10,20 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "CellularAutomata.h"
+
 #include "display.h"
 
+#include <iomanip>
+#include <iostream>
 #include <string>
 
-#define TIME
-
-#ifdef TIME
 #include <chrono>
-#endif
+
+#include "backend_cuda.h"
+
+#define EQUAL_S(a, b) strcmp(a, b) == 0
 
 #define assert(x, msg)                                   \
     {                                                    \
@@ -32,17 +34,23 @@
         }                                                \
     }
 
-#define EQUAL_S(a, b) strcmp(a, b) == 0
+#define timeit(fn)                                          \
+    auto t1 = std::chrono::high_resolution_clock::now();    \
+    fn;                                                     \
+    auto t2 = std::chrono::high_resolution_clock::now();    \
+    std::chrono::duration<double, std::milli> ms = t2 - t1; \
+    std::cout << ms.count() << " ms" << std::endl;
 
-void print2D(float *array, int height, int width)
+template <typename T>
+void print2D(T *array, const int height, const int width)
 {
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
         {
-            printf("%4.1f ", array[y * width + x]);
+            std::cout << std::setfill(' ') << std::setw(5) << std::fixed << std::setprecision(2) << array[y * width + x] << " ";
         }
-        printf("\n");
+        std::cout << std::endl;
     }
 }
 
@@ -80,64 +88,75 @@ void parseArgs(int argc, char **argv, Arguments *args)
     assert(args->fps > 0, "FPS must be greater than 0");
 }
 
+#define CENTER_X args.width / 2
+#define CENTER_Y args.height / 2
+
 int main(int argc, char *argv[])
 {
     // SETUP
+
+    // passLambda(Activations::lambda<float>);
+
+    // return 0;
 
     Arguments args{0};
     parseArgs(argc, argv, &args);
 
     args.seed = CellularAutomata::InitRandom(args.seed);
+
     printf("seed: %8X\n", args.seed);
 
-    State state;
-    Kernel kernel;
+    State<float> stateGPU;
+    State<float> stateCPU;
+    Kernel<float> kernel;
 
-    printf("pre init\n");
+    stateFunc<float> sf = nullptr;
+    kernelFunc<float> kf = Kernels::life;
+    Activations::OpCode af = Activations::life;
 
-    // CellularAutomata::InitState(&state, args.height, args.width, NULL);
-    // CellularAutomata::InitKernel(&kernel, 3, Kernels::life);
+    CellularAutomata::InitState(&stateGPU, args.height, args.width, sf, Device::CUDA);
+    CellularAutomata::InitState(&stateCPU, args.height, args.width, (stateFunc<float>)nullptr, Device::CPU);
 
-    printf("init\n");
+    CellularAutomata::InitKernel(&kernel, 3, kf, Device::CUDA);
 
-    // exit(0);
-
+    // print2D(state.curr, state.height, state.width);
     // print2D(kernel.kernel, kernel.size, kernel.size);
 
-    // States::Objects::Glider(&state, 5, 5, States::Objects::Direction::NW);
-    // States::Objects::Glider(&state, 50, 50, States::Objects::SW);
-    // States::Objects::Glider(&state, 60, 40, States::Objects::NE);
-    // States::Objects::Glider(&state, 60, 50, States::Objects::SE);
+    // States::Objects::Glider(&stateCPU, 90, 10);
+    // States::Objects::Spaceship(&stateCPU, 80, 70);
+    // States::Objects::Bipole(&stateCPU, 60, 60);
+    // States::Objects::Tripole(&stateCPU, 10, 80);
+    States::Objects::f_Pentomino(&stateCPU, CENTER_X, CENTER_Y);
+
+    CellularAutomata::CopyTo(&stateCPU, &stateGPU);
+
+    // print2D(stateCPU.curr, stateCPU.height, stateCPU.width);
+
+    // std::cout << std::setfill('-') << std::setw(100) << "" << std::endl;
+
+    // CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive);
+
+    // CellularAutomata::CopyTo(&stateGPU, &stateCPU);
+
+    // print2D(stateCPU.curr, stateCPU.height, stateCPU.width);
 
     // MAIN PART
 
-    //     Display display = Display(args.height, args.width, args.scale, args.fps);
-    //     while (display.run())
-    //     {
-    //         if (display.nextFrame())
-    //         {
-    //             display.draw(state.current);
-
-    // #ifdef TIME
-    //             auto t1 = std::chrono::high_resolution_clock::now();
-    // #endif
-
-    //             CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
-
-    // #ifdef TIME
-    //             auto t2 = std::chrono::high_resolution_clock::now();
-    //             std::chrono::duration<double, std::milli> ms = t2 - t1;
-    //             printf("%f ms\n", ms.count());
-    // #endif
-    //         }
-    //     }
-
-    for (int i = 0; i < 5; i++)
+    Display display = Display(args.height, args.width, args.scale, args.fps);
+    while (display.run())
     {
-        CellularAutomata::Epoch(&state, &kernel, Activations::life, args.recursive);
+        if (display.nextFrame())
+        {
+            CellularAutomata::CopyTo(&stateGPU, &stateCPU);
+            display.draw(stateCPU.curr);
+
+            timeit(CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive));
+            // CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive);
+        }
     }
 
-    CellularAutomata::DestroyState(&state);
+    CellularAutomata::DestroyState(&stateGPU);
+    CellularAutomata::DestroyState(&stateCPU);
     CellularAutomata::DestroyKernel(&kernel);
 
     return 0;

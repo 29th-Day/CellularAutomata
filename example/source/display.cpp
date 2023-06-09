@@ -12,7 +12,7 @@ Display::Display(int height, int width, int scale, int fps)
     _fps = fps;
 
     _frameStart = 0;
-    _frameDelta = 0;
+    _frameDelta = 10000;
     _running = true;
     _pause = false;
 
@@ -32,21 +32,15 @@ Display::~Display()
 
 void Display::draw(float *data)
 {
-    unsigned int *pixels = NULL;
-    int pitch = NULL;
+    unsigned int *pixels = nullptr;
+    int pitch = 0;
 
-    SDL_LockTexture(_texture, NULL, (void **)&pixels, &pitch);
-
-    // printf("pitch: %u\n", pitch);
+    SDL_LockTexture(_texture, NULL, reinterpret_cast<void **>(&pixels), &pitch);
 
     for (int i = 0; i < _height * _width; i++)
     {
-        unsigned char value = (unsigned char)data[i] * 0xFF;
-        int rgba = (value << 24) | (value << 16) | (value << 8) | 0xFF;
-
-        // printf("%x\n", rgba);
-
-        pixels[i] = rgba;
+        unsigned char value = static_cast<unsigned char>(data[i] * 0xFF);
+        pixels[i] = (value << 24) | (value << 16) | (value << 8) | 0xFF;
     }
 
     SDL_UnlockTexture(_texture);
