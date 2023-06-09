@@ -6,11 +6,6 @@
 #include "rng.h"
 #include "states.h"
 
-// does this work?
-#ifndef cudaDeviceId
-#define cudaDeviceId 0
-#endif
-
 namespace CellularAutomata
 {
     unsigned int InitRandom(unsigned int seed);

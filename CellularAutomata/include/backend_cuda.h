@@ -1,6 +1,5 @@
 #pragma once
 
-#include "activations.h"
 #include "common.h"
 
 void allocateCUDA(void **array, size_t bytes);
