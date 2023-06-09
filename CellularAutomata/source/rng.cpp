@@ -1,6 +1,7 @@
 #include "rng.h"
 
 #include <random>
+#include <type_traits>
 
 static std::mt19937 rng; // thread_local ?
 
@@ -12,14 +13,16 @@ unsigned int RNG::seed(unsigned int seed)
     return seed;
 }
 
-int RNG::number(int min, int max)
+template <typename T>
+integer RNG::random(T min, T max)
 {
-    std::uniform_int_distribution<int> dist(min, max);
+    std::uniform_int_distribution<T> dist(min, max);
     return dist(rng);
 }
 
-float RNG::decimal(float min, float max)
+template <typename T>
+decimal RNG::random(T min, T max)
 {
-    std::uniform_real_distribution<float> dist(min, max);
+    std::uniform_real_distribution<T> dist(min, max);
     return dist(rng);
 }

@@ -1,8 +1,29 @@
-#include <stdio.h>
+/**
+ * @file main.cpp
+ * @author 29th-Day (https://github.com/29th-Day)
+ * @brief example main file
+ * @version 0.1
+ * @date 2023-04-20
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include <stdlib.h>
 
-#include "engine.h"
+#include "CellularAutomata.h"
+
 #include "display.h"
+
+#include <iomanip>
+#include <iostream>
+#include <string>
+
+#include <chrono>
+
+#include "backend_cuda.h"
+
+#define EQUAL_S(a, b) strcmp(a, b) == 0
 
 #define assert(x, msg)                                   \
     {                                                    \
@@ -13,31 +34,52 @@
         }                                                \
     }
 
-#define EQUAL_S(a, b) strcmp(a, b) == 0
+#define timeit(fn)                                          \
+    auto t1 = std::chrono::high_resolution_clock::now();    \
+    fn;                                                     \
+    auto t2 = std::chrono::high_resolution_clock::now();    \
+    std::chrono::duration<double, std::milli> ms = t2 - t1; \
+    std::cout << ms.count() << " ms" << std::endl;
+
+template <typename T>
+void print2D(T *array, const int height, const int width)
+{
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            std::cout << std::setfill(' ') << std::setw(5) << std::fixed << std::setprecision(2) << array[y * width + x] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
 
 struct Arguments
 {
-    int height;
-    int width;
-    int scale;
-    int fps;
-    int seed;
+    unsigned int height;
+    unsigned int width;
+    unsigned int scale;
+    unsigned int fps;
+    unsigned int seed;
+    bool recursive;
 };
 
 void parseArgs(int argc, char **argv, Arguments *args)
 {
-    for (int i = 1; i < argc; i += 2)
+    for (int i = 1; i < argc; i++)
     {
         if (EQUAL_S(argv[i], "-h"))
-            args->height = atoi(argv[i + 1]);
+            args->height = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-w"))
-            args->width = atoi(argv[i + 1]);
+            args->width = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-s"))
-            args->scale = atoi(argv[i + 1]);
+            args->scale = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-fps"))
-            args->fps = atoi(argv[i + 1]);
+            args->fps = std::stoi(argv[++i]);
         else if (EQUAL_S(argv[i], "-seed"))
-            args->seed = atoi(argv[i + 1]);
+            args->seed = std::stoul(argv[++i]);
+        else if (EQUAL_S(argv[i], "-r"))
+            args->recursive = true;
     }
 
     assert(args->height > 0, "HEIGHT must be greater than 0");
@@ -46,21 +88,57 @@ void parseArgs(int argc, char **argv, Arguments *args)
     assert(args->fps > 0, "FPS must be greater than 0");
 }
 
-int main(int argc, char **argv)
+#define CENTER_X args.width / 2
+#define CENTER_Y args.height / 2
+
+int main(int argc, char *argv[])
 {
     // SETUP
+
+    // passLambda(Activations::lambda<float>);
+
+    // return 0;
 
     Arguments args{0};
     parseArgs(argc, argv, &args);
 
-    args.seed = Engine::InitRandom(args.seed);
-    printf("seed: %u\n", args.seed);
+    args.seed = CellularAutomata::InitRandom(args.seed);
 
-    State state;
-    Kernel kernel;
+    printf("seed: %8X\n", args.seed);
 
-    Engine::InitState(&state, args.height, args.width, States::randb);
-    Engine::InitKernel(&kernel, Kernels::life);
+    State<float> stateGPU;
+    State<float> stateCPU;
+    Kernel<float> kernel;
+
+    stateFunc<float> sf = nullptr;
+    kernelFunc<float> kf = Kernels::life;
+    Activations::OpCode af = Activations::life;
+
+    CellularAutomata::InitState(&stateGPU, args.height, args.width, sf, Device::CUDA);
+    CellularAutomata::InitState(&stateCPU, args.height, args.width, (stateFunc<float>)nullptr, Device::CPU);
+
+    CellularAutomata::InitKernel(&kernel, 3, kf, Device::CUDA);
+
+    // print2D(state.curr, state.height, state.width);
+    // print2D(kernel.kernel, kernel.size, kernel.size);
+
+    // States::Objects::Glider(&stateCPU, 90, 10);
+    // States::Objects::Spaceship(&stateCPU, 80, 70);
+    // States::Objects::Bipole(&stateCPU, 60, 60);
+    // States::Objects::Tripole(&stateCPU, 10, 80);
+    States::Objects::f_Pentomino(&stateCPU, CENTER_X, CENTER_Y);
+
+    CellularAutomata::CopyTo(&stateCPU, &stateGPU);
+
+    // print2D(stateCPU.curr, stateCPU.height, stateCPU.width);
+
+    // std::cout << std::setfill('-') << std::setw(100) << "" << std::endl;
+
+    // CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive);
+
+    // CellularAutomata::CopyTo(&stateGPU, &stateCPU);
+
+    // print2D(stateCPU.curr, stateCPU.height, stateCPU.width);
 
     // MAIN PART
 
@@ -69,13 +147,17 @@ int main(int argc, char **argv)
     {
         if (display.nextFrame())
         {
-            display.draw(state.current);
-            Engine::Epoch(&state, &kernel, Activations::life);
+            CellularAutomata::CopyTo(&stateGPU, &stateCPU);
+            display.draw(stateCPU.curr);
+
+            timeit(CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive));
+            // CellularAutomata::Epoch(&stateGPU, &kernel, af, args.recursive);
         }
     }
 
-    Engine::DestroyState(&state);
-    Engine::DestroyKernel(&kernel);
+    CellularAutomata::DestroyState(&stateGPU);
+    CellularAutomata::DestroyState(&stateCPU);
+    CellularAutomata::DestroyKernel(&kernel);
 
     return 0;
 }
