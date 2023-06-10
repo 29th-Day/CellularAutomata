@@ -2,12 +2,10 @@
 
 #include <cmath>
 
-#include <cuda_runtime.h>
-
 #define EULER_NUMBER_F 2.71828182846f
 
 template <typename T>
-__device__ __host__ T Activations::_normal(T x)
+cudaFn T Activations::_normal(T x)
 {
     if (x < 0)
         return static_cast<T>(0);
@@ -17,10 +15,10 @@ __device__ __host__ T Activations::_normal(T x)
         return x;
 }
 
-template __device__ __host__ float Activations::_normal(float);
+template cudaFn float Activations::_normal(float);
 
 template <typename T>
-__device__ __host__ T Activations::_life(T x)
+cudaFn T Activations::_life(T x)
 {
     unsigned char u = static_cast<unsigned char>(x);
 
@@ -41,7 +39,7 @@ __device__ __host__ T Activations::_life(T x)
     }
 }
 
-template __device__ __host__ float Activations::_life(float);
+template cudaFn float Activations::_life(float);
 
 // template <typename T>
 // device host T Activations::sigmoid(T x)

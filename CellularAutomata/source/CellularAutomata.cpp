@@ -5,6 +5,8 @@
 #include "rng.h"
 #include <algorithm>
 
+#include <cstdio>
+
 #ifdef cudaEnabled
 #include "backend_cuda.h"
 #endif
@@ -15,7 +17,7 @@ unsigned int CellularAutomata::InitRandom(unsigned int seed)
 }
 
 template <typename T>
-void CellularAutomata::InitState(State<T> *state, int h, int w, stateFunc<T> fn, Device device)
+void CellularAutomata::InitState(State<T> *state, const int h, const int w, stateFunc<T> fn, const Device device)
 {
 #ifdef cudaEnabled
     size_t size = h * w * sizeof(T);

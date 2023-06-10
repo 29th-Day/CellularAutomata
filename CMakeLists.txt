@@ -5,8 +5,8 @@ option(BUILD_EXAMPLE "Build example?" ON)
 option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
 option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" OFF)
 
-option(USE_OPENMP "Use OpenMP?" OFF)
-option(USE_CUDA "Use CUDA?" ON)
+option(USE_OPENMP "Use OpenMP?" ON)
+option(USE_CUDA "Use CUDA?" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 

@@ -2,20 +2,20 @@
 
 #include "common.h"
 
-// #ifdef cudaEnabled
-// #include <cuda_runtime.h>
-// // #define cudaFn #ifdef __CUDACC__ __device__ __host #endif
-// #endif
-
+#ifdef cudaEnabled
 #include <cuda_runtime.h>
+#define cudaFn __device__ __host__
+#else
+#define cudaFn
+#endif
 
 namespace Activations
 {
     template <typename T>
-    __device__ __host__ T _normal(T x);
+    cudaFn T _normal(T x);
 
     template <typename T>
-    __device__ __host__ T _life(T x);
+    cudaFn T _life(T x);
 
     // template <typename T>
     // device host T sigmoid(T x);

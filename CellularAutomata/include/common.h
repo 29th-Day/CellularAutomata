@@ -3,7 +3,7 @@
 enum Device
 {
     CPU,
-    CUDA
+    CUDA,
 };
 
 template <typename T>
