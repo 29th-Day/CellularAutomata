@@ -29,7 +29,12 @@ namespace Activations
     enum OpCode
     {
         normal,
-        life
+        life,
+        sigmoid,
+        tanh,
+        sin,
+        cos,
+        tan
     };
 }
 

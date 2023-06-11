@@ -13,24 +13,10 @@
 
 // CUDA KERNEL
 
-__device__ void cudaPrint2D(float *array, int height, int width, int blockX)
-{
-    if (threadIdx.y + threadIdx.x == 0 && blockIdx.x == blockX)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                printf("%4.1f ", array[y * width + x]);
-            }
-            printf("\n");
-        }
-    }
-    __syncthreads();
-}
+using namespace Activations;
 
 template <typename T>
-__device__ activationFunc<T> activFunc[] = {Activations::_normal, Activations::_life};
+__device__ activationFunc<T> activFunc[] = {_normal, _life, _sigmoid, _tanh, _sin, _cos, _tan};
 
 template<typename T>
 __global__ void convKernel(

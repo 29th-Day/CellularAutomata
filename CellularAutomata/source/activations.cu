@@ -41,26 +41,45 @@ cudaFn T Activations::_life(T x)
 
 template cudaFn float Activations::_life(float);
 
-// template <typename T>
-// device host T Activations::sigmoid(T x)
-// {
-//     return (1 / (1 + std::pow(EULER_NUMBER_F, -x)));
-// }
 
-// template <typename T>
-// device host T Activations::sin(T x)
-// {
-//     return std::sin(x);
-// }
+template <typename T>
+cudaFn T Activations::_sigmoid(T x)
+{
+    return (1 / (1 + std::pow(EULER_NUMBER_F, -x)));
+}
 
-// template <typename T>
-// device host T Activations::cos(T x)
-// {
-//     return std::cos(x);
-// }
+template cudaFn float Activations::_sigmoid(float);
 
-// template <typename T>
-// device host T Activations::tan(T x)
-// {
-//     return std::tan(x);
-// }
+template <typename T>
+cudaFn T Activations::_tanh(T x)
+{
+    return std::tanh(x);
+}
+
+template cudaFn float Activations::_tanh(float);
+
+
+
+template <typename T>
+cudaFn T Activations::_sin(T x)
+{
+    return std::sin(x);
+}
+
+template cudaFn float Activations::_sin(float);
+
+template <typename T>
+cudaFn T Activations::_cos(T x)
+{
+    return std::cos(x);
+}
+
+template cudaFn float Activations::_cos(float);
+
+template <typename T>
+cudaFn T Activations::_tan(T x)
+{
+    return std::tan(x);
+}
+
+template cudaFn float Activations::_tan(float);

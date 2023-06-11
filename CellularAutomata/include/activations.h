@@ -17,16 +17,18 @@ namespace Activations
     template <typename T>
     cudaFn T _life(T x);
 
-    // template <typename T>
-    // device host T sigmoid(T x);
+    template <typename T>
+    cudaFn T _sigmoid(T x);
 
-    // template <typename T>
-    // device host T sin(T x);
+    template <typename T>
+    cudaFn T _tanh(T x);
 
-    // template <typename T>
-    // device host T cos(T x);
+    template <typename T>
+    cudaFn T _sin(T x);
 
-    // template <typename T>
-    // device host T tan(T x);
+    template <typename T>
+    cudaFn T _cos(T x);
 
+    template <typename T>
+    cudaFn T _tan(T x);
 }

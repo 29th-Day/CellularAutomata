@@ -3,8 +3,10 @@
 #include "activations.h"
 #include "common.h"
 
+using namespace Activations;
+
 template <typename T>
-activationFunc<T> activFunc[] = {Activations::_normal, Activations::_life};
+activationFunc<T> activFunc[] = {_normal, _life, _sigmoid, _tanh, _sin, _cos, _tan};
 
 template <typename T>
 void epochCPU(
