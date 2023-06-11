@@ -10,7 +10,7 @@ TODOs until Version 1.0:
 - [ ] Tests
 - [ ] Benchmark
 - [ ] More types supported
-- [ ] More activation functions
+- [x] More activation functions
 - [ ] >3 kernel sizes?
 - [ ] Custom state function
 - [ ] Custom kernel function
