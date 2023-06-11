@@ -31,7 +31,10 @@ namespace Activations
         normal,
         life,
         sigmoid,
-        tanh
+        tanh,
+        sin,
+        cos,
+        tan
     };
 }
 

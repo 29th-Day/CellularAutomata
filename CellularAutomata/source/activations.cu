@@ -41,6 +41,7 @@ cudaFn T Activations::_life(T x)
 
 template cudaFn float Activations::_life(float);
 
+
 template <typename T>
 cudaFn T Activations::_sigmoid(T x)
 {
@@ -56,3 +57,29 @@ cudaFn T Activations::_tanh(T x)
 }
 
 template cudaFn float Activations::_tanh(float);
+
+
+
+template <typename T>
+cudaFn T Activations::_sin(T x)
+{
+    return std::sin(x);
+}
+
+template cudaFn float Activations::_sin(float);
+
+template <typename T>
+cudaFn T Activations::_cos(T x)
+{
+    return std::cos(x);
+}
+
+template cudaFn float Activations::_cos(float);
+
+template <typename T>
+cudaFn T Activations::_tan(T x)
+{
+    return std::tan(x);
+}
+
+template cudaFn float Activations::_tan(float);

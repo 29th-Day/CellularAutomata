@@ -22,4 +22,13 @@ namespace Activations
 
     template <typename T>
     cudaFn T _tanh(T x);
+
+    template <typename T>
+    cudaFn T _sin(T x);
+
+    template <typename T>
+    cudaFn T _cos(T x);
+
+    template <typename T>
+    cudaFn T _tan(T x);
 }
