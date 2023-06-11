@@ -15,6 +15,7 @@ TODOs until Version 1.0:
 - [ ] Custom state function
 - [ ] Custom kernel function
 - [ ] Documentation
+- [ ] Testing with clang / g++?
 
 <!-- (Gif?) -->
 
@@ -30,7 +31,23 @@ CellularAutomata is a simple C++ library for simulating [cellular automata](http
 - Activation
 - Similarity to neural networks -->
 
-...
+Every cell in a cellular automaton use the *information of neighboring cells* and a *fixed set of rules* to determine their own next cell state.
+
+Using convolutions and activations 
+
+![alt text](Convolution_GameOfLife.jpeg)
+
+## Build
+
+Software and versions used by myself. Lower versions may be also working.
+
+- Windows 11
+- CMake (> 3.20)
+- MSVC (> 19.35)
+
+Optional
+
+- CUDA Toolkit (12.1)
 
 ## Documentation
 
