@@ -18,6 +18,11 @@ if(${USE_CUDA})
     find_package(CUDAToolkit REQUIRED)
 endif()
 
+# Add the /NODEFAULTLIB:LIBCMT linker option
+if(${USE_CUDA} AND ${MSVC})
+    add_link_options(/NODEFAULTLIB:LIBCMT)
+endif()
+
 add_subdirectory(CellularAutomata)
 
 if(${BUILD_TESTS})

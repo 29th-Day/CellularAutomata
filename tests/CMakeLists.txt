@@ -21,7 +21,7 @@ target_link_libraries(${TARGET} PRIVATE ${PROJECT_NAME})
 enable_testing()
 doctest_discover_tests(${TARGET})
 
-# Add the /NODEFAULTLIB:LIBCMT linker option
-if(${USE_CUDA} AND MSVC)
-  target_link_options(${TARGET} PRIVATE /NODEFAULTLIB:LIBCMT)
-endif()
+# # Add the /NODEFAULTLIB:LIBCMT linker option
+# if(${USE_CUDA} AND ${MSVC})
+#   target_link_options(${TARGET} PRIVATE /NODEFAULTLIB:LIBCMT)
+# endif()
