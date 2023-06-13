@@ -14,6 +14,7 @@ TODOs until Version 1.0:
 - [ ] >3 kernel sizes?
 - [ ] Custom state function
 - [ ] Custom kernel function
+- [ ] Activation function? Maybe lambda?
 - [ ] Documentation
 - [ ] Testing with clang / g++?
 
