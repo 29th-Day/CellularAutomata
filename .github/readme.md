@@ -5,7 +5,7 @@ The project is still in early development. The biggest problem for now is making
 TODOs until Version 1.0:
 
 - [x] CPU implementation
-- [] CUDA support
+- [ ] CUDA support
 - [x] Examples
 - [ ] Tests
 - [ ] Benchmark
