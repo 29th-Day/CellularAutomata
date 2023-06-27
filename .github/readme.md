@@ -1,11 +1,11 @@
 # Cellular Automata
 
-The project is still in early development.
+The project is still in early development. The biggest problem for now is making CPU and CUDA work smoothly.
 
 TODOs until Version 1.0:
 
 - [x] CPU implementation
-- [x] CUDA support
+- [] CUDA support
 - [x] Examples
 - [ ] Tests
 - [ ] Benchmark
