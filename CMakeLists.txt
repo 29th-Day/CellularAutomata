@@ -13,10 +13,10 @@ set(CMAKE_CXX_STANDARD 11)
 # https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 set(CUDA_ARCH "86" CACHE STRING "CUDA architecture to build for")
 
-if(${USE_CUDA})
-    enable_language(CUDA)
-    find_package(CUDAToolkit REQUIRED)
-endif()
+# if(${USE_CUDA})
+#     enable_language(CUDA)
+#     find_package(CUDAToolkit REQUIRED)
+# endif()
 
 # Add the /NODEFAULTLIB:LIBCMT linker option
 if(${USE_CUDA} AND ${MSVC})
