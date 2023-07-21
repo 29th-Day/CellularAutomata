@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20.0)
 project(CellularAutomata VERSION 0.1.0 LANGUAGES CXX HOMEPAGE_URL https://github.com/29th-Day/CellularAutomata)
 
-option(BUILD_EXAMPLE "Build example?" ON)
+option(BUILD_EXAMPLE "Build examples?" ON)
 option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
 option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" OFF)
 
@@ -10,17 +10,10 @@ option(USE_CUDA "Use CUDA?" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 
-# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
-set(CUDA_ARCH "86" CACHE STRING "CUDA architecture to build for")
-
-# if(${USE_CUDA})
-#     enable_language(CUDA)
-#     find_package(CUDAToolkit REQUIRED)
-# endif()
-
-# Add the /NODEFAULTLIB:LIBCMT linker option
-if(${USE_CUDA} AND ${MSVC})
-    add_link_options(/NODEFAULTLIB:LIBCMT)
+# development only, not actually nessecary but IntelliSense wouldn't find CUDA otherwise
+if(USE_CUDA)
+    find_package(CUDAToolkit REQUIRED)
+    include_directories(${CUDAToolkit_INCLUDE_DIRS})
 endif()
 
 add_subdirectory(CellularAutomata)

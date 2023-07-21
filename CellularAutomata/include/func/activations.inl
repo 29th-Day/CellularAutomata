@@ -1,5 +1,5 @@
 #include "activations.hpp"
-#include "common.hpp"
+#include "../core/common.hpp"
 #include <cmath>
 
 #ifdef __CUDACC__
@@ -15,12 +15,7 @@ namespace CellularAutomata
         template<typename T>
         cudaFn T normal<T>::operator()(const T x) const
         {
-            if (x < 0)
-                return static_cast<T>(0);
-            else if (x > 1)
-                return static_cast<T>(1);
-            else
-                return x;
+            return static_cast<T>(std::min(0, std::max(x, 1)));
         }
 
         template<typename T>

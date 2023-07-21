@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.hpp"
+#include "../core/common.hpp"
 
 namespace CellularAutomata
 {
@@ -69,7 +69,7 @@ namespace CellularAutomata
         template <typename T, typename Activation>
         void epoch(
             T* input, T* kernel, T* output, Activation fn,
-            const int h, const int w, const int s, const bool r);
+            const int h, const int w, const int s, const int r);
     }
 }
 

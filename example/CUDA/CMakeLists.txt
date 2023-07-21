@@ -4,26 +4,27 @@ set(TARGET example_cuda)
 
 enable_language(CUDA)
 find_package(CUDAToolkit REQUIRED)
-
-# source files
-set(FILES
-    source/main.cu
-)
-
-# build executable
-add_executable(${TARGET} ${FILES})
-
-
 message(STATUS "Using CUDA (${CUDAToolkit_VERSION})")
 
-# https://cmake.org/cmake/help/latest/manual/cmake-properties.7.html
+add_executable(${TARGET} main.cu)
+
+# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 set_target_properties(${TARGET} PROPERTIES
-    CUDA_ARCHITECTURES ${CUDA_ARCH}
-    # CUDA_RUNTIME_LIBRARY Static
+    CUDA_ARCHITECTURES "86" 
 )
+
+if($<TARGET_EXISTS:OpenMP::OpenMP_CXX>)
+    message(STATUS "openmp")
+endif()
+
+if(MSVC)
+    target_link_options(${TARGET} PRIVATE /NODEFAULTLIB:LIBCMT)
+endif()
 
 target_link_libraries(${TARGET}
     PRIVATE
     # CellularAutomata
     ${PROJECT_NAME}
+    # OpenMP
+    $<IF:$<TARGET_EXISTS:OpenMP::OpenMP_CXX>, OpenMP::OpenMP_CXX, >
 )

@@ -1,34 +1,39 @@
 # Cellular Automata
 
-The project is still in early development. The biggest problem for now is making CPU and CUDA work smoothly.
-
-TODOs until Version 1.0:
-
-- [x] CPU implementation
-- [ ] CUDA support
-- [x] Examples
-- [ ] Tests
-- [ ] Benchmark
-- [ ] More types supported
-- [x] More activation functions
-- [ ] >3 kernel sizes?
-- [ ] Custom state function
-- [ ] Custom kernel function
-- [ ] Activation function? Maybe lambda?
-- [ ] Documentation
-- [ ] Testing with clang / g++?
+The project is still in early development. However, the current version should be functional.
 
 <!-- (Gif?) -->
 
 ## TL;DR
 
-CellularAutomata is a simple C++ library for simulating [cellular automata](https://en.wikipedia.org/wiki/Cellular_automaton). It can simulate discrete (like [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)) or continuous spaces using convolutions and activations.
+CellularAutomata is a simple C++ library for simulating [cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton). It can simulate discrete (like [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)) or continuous spaces using convolutions and activations.
+
+## Installation
+
+Copy the header into an accessible include directory. Since CellularAutomata is a template library, no further installation is necessary.
+
+## Usage
+
+Use `#include <CellularAutomata.hpp>` in the main source file. All functions and classes are then available under the namespace 'CellularAutomata'. Examples are provided at '[example](https://github.com/29th-Day/CellularAutomata/tree/main/example)'.
+
+### OpenMP
+
+To utilize OpenMP, enable and link OpenMP when compiling the source file. The library uses the `#pragma omp parallel` directive when OpenMP is available.
+
+### CUDA
+
+To utilize CUDA the source file must be compiled using Nvidias NVCC compiler. The library uses the `__CUDACC__` macro detect when CUDA is available.
+
+## Documentation
+
+Documentation can be found on the [repository wiki page](https://github.com/29th-Day/CellularAutomata/wiki) and as comments on the respective functions.
+
 
 ## How it works
 
-Every cell in a cellular automaton use the *information of neighboring cells* and a *fixed set of rules* to determine their own next cell state.
+Every cell in a cellular automaton use the *information of neighboring cells* and a *fixed set of rules* to determine their own next cell state. This behavior can be implemented using convolutions and activations. A convolution is a mathematical operation that involves overlaying a small filter on an larger array to extract features by computing the sum of element-wise products between the filter and the corresponding pixel values in the image. An activation function typically is an unary function which transforms the input in a non-linear way.
 
-This behavior can be implemented using convolutions and activations. The main advantage of this approach is every set of rules should be able to be implemented using these building blocks.
+The main advantage of this approach is every set of rules should be able to be implemented using these building blocks.
 
 ### Example: Conway's Game of Life
 
@@ -43,8 +48,8 @@ In combination with the following activation function every rule of GoL is appli
 ```
 fn life(int x)
 {
-    int neighbors = x & 0xF; // lower nibble  - 0b00001111
-    bool alive = x & 0xF0;   // higher nibble - 0b11110000
+    int neighbors = x & 0xF; // lower nibble
+    bool alive = x & 0xF0;   // higher nibble
 
     switch(neighbors)
     {
@@ -62,7 +67,7 @@ The rules of GoL can be found on the web, e.g. [Wikipedia](https://en.wikipedia.
 
 ### Side note
 
-This process is exactly what convolutional neural networks do to extract relevant information from images. The kernel values are changed during training to improve the output of the convolution.
+This process is similar to how convolutional neural networks extract relevant information from images, with the kernel values being adjusted during training to enhance the convolution's output.
 
 ## Build
 
@@ -74,15 +79,12 @@ Software and versions used by myself. Lower versions may be also working.
 
 Optional
 
+- Compiler with OpenMP support
 - CUDA Toolkit (12.1)
-
-## Documentation
-
-Documentation can be found on the [repository wiki page](https://github.com/29th-Day/CellularAutomata/wiki)
 
 ## Motive
 
-The goal  is to build a project with C++, CUDA and CMake to deepen my understanding with the whole ecosystem around C++. This most probably is NOT the most efficient implementation. I am deliberately not using many already build functionalities or libraries (especially for CUDA) in favor of programming out implementations myself (this may change in the future).
+The goal  is to build a project with C++, CUDA and CMake to deepen my understanding with the whole ecosystem around C++. This most probably is NOT the most efficient implementation. I am deliberately not using many already build functionalities or libraries (especially for CUDA) in favor of programming out implementations myself. In the future more efficient implementations may or may not be provided.
 
 ## Further information
 

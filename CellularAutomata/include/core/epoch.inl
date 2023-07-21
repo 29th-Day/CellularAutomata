@@ -1,9 +1,11 @@
-#include "CellularAutomata.hpp"
+#include "epoch.hpp"
 #include "cpu.hpp"
 
 #ifdef __CUDACC__
-#include "cuda.cuh"
+#include "../cuda/cuda.cuh"
 #endif
+
+float test(float x) { return x; }
 
 namespace CellularAutomata
 {

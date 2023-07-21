@@ -1,7 +1,7 @@
 #include "common.hpp"
 
 #ifdef __CUDACC__
-#include "cuda.cuh"
+#include "../cuda/cuda.cuh"
 #endif
 
 #include <algorithm>

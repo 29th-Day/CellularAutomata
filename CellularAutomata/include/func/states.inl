@@ -1,5 +1,5 @@
-#include "rng.hpp"
 #include "states.hpp"
+#include "../core/rng.hpp"
 
 namespace CellularAutomata
 {

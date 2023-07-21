@@ -1,0 +1,19 @@
+/**
+ * @file CellularAutomata
+ * @author 29th-Day (https://github.com/29th-Day)
+ * @brief Main include file for library
+ * @version 0.2
+ * @date 2023-07-21
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
+#pragma once
+
+#include "core/common.hpp"
+#include "core/rng.hpp"
+#include "core/epoch.hpp"
+#include "func/activations.hpp"
+#include "func/kernels.hpp"
+#include "func/states.hpp"

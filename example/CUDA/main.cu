@@ -9,10 +9,11 @@
  *
  */
 
-#include "CellularAutomata.hpp"
+#include <CellularAutomata>
 
 using namespace CellularAutomata;
 
+// Custom activation function
 ACTIVATION(identity,
 {
     return x;

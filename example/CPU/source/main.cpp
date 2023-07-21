@@ -9,7 +9,7 @@
  *
  */
 
-#include "CellularAutomata.hpp"
+#include <CellularAutomata>
 
 #include "display.h"
 #include "timeit.h"

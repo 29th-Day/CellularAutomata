@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.hpp"
+#include "../core/common.hpp"
 
 #ifdef __CUDACC__
 #include <cuda_runtime.h>

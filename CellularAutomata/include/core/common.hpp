@@ -39,8 +39,6 @@ namespace CellularAutomata
 
     /**
      * @brief Class for handeling double buffered 2D grids.
-     *
-     *
      * @tparam T type
      */
     template <typename T>

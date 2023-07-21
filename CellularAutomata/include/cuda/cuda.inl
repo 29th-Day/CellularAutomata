@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cuda.cuh"
-#include "common.hpp"
+#include "../core/common.hpp"
 
 #include <iostream>
 
@@ -10,7 +10,7 @@
 
 #define cudaCheck(a) {if (a != cudaSuccess) {std::cout << "CUDA error (" << __FILE__ << ", " << __LINE__ << "): " << cudaGetErrorString(cudaGetLastError()) << std::endl;}}
 
-#define TILE_SIZE 10
+#define TILE_SIZE 32
 
 template<typename T, typename Activation>
 __global__ void convKernel(
@@ -20,7 +20,8 @@ __global__ void convKernel(
     Activation fn,
     const int iHeight,
     const int iWidth,
-    const int kSize)
+    const int kSize,
+    const bool recursive)
 {
     extern __shared__ T shared[];
 
@@ -53,9 +54,9 @@ __global__ void convKernel(
 
 #pragma endregion Variables
 
-#pragma region Loading
-
     // TODO: (non) recursive loading 
+
+#pragma region Loading
 
     // Because of halo / padding, each thread has to load multiple elements
     for (int i = tid; i < memSize; i += threadsPerBlock)
@@ -185,7 +186,7 @@ namespace CellularAutomata
 
             convKernel<<<grid, block, memSize>>> (
                 input, kernel, output, fn,
-                h, w, s);
+                h, w, s, r);
 
             cudaCheck(cudaDeviceSynchronize());
         }

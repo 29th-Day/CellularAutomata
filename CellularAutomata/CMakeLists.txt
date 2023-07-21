@@ -1,20 +1,28 @@
 set(TARGET ${PROJECT_NAME})
 
+set(FILES
+    "include/core/common.hpp"
+    "include/core/common.inl"
+    "include/core/cpu.hpp"
+    "include/core/cpu.inl"
+    "include/core/epoch.hpp"
+    "include/core/epoch.inl"
+    "include/core/rng.hpp"
+    "include/core/rng.inl"
+    "include/cuda/cuda.cuh"
+    "include/cuda/cuda.inl"
+    "include/func/activations.hpp"
+    "include/func/activations.inl"
+    "include/func/kernels.hpp"
+    "include/func/kernels.inl"
+    "include/func/states.hpp"
+    "include/func/states.inl"
+)
+
 add_library(${TARGET} INTERFACE)
-target_include_directories(${TARGET} INTERFACE .)
 
-set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 11)
-
-# configure OpenMP
-if(USE_OPENMP)
-    find_package(OpenMP REQUIRED)
-    message(STATUS "Using OpenMP (${OpenMP_CXX_VERSION})")
-    target_link_libraries(${TARGET} INTERFACE OpenMP::OpenMP_CXX)
-endif()
-
-# debug only
-if(USE_CUDA)
-    enable_language(CUDA)
-    find_package(CUDAToolkit REQUIRED)
-    target_include_directories(${TARGET} INTERFACE ${CUDAToolkit_INCLUDE_DIRS})
-endif()
+target_sources(${TARGET} PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES ${FILES}
+)
