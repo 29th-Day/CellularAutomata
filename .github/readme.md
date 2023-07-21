@@ -10,11 +10,11 @@ CellularAutomata is a simple C++ library for simulating [cellular automaton](htt
 
 ## Installation
 
-Copy the header into an accessible include directory. Since CellularAutomata is a template library, no further installation is necessary.
+Copy the header files into an accessible include directory. Since CellularAutomata is a template library, no further installation is necessary.
 
 ## Usage
 
-Use `#include <CellularAutomata>` in the main source file. All functions and classes are then available under the namespace 'CellularAutomata'. Examples are provided at '[example](https://github.com/29th-Day/CellularAutomata/tree/main/example)'.
+Use `#include <CellularAutomata>` in the main source file. All functions and classes are then available under the namespace 'CellularAutomata'. Examples are provided [here](https://github.com/29th-Day/CellularAutomata/tree/main/example).
 
 ### OpenMP
 
@@ -31,19 +31,19 @@ Documentation can be found on the [repository wiki page](https://github.com/29th
 
 ## How it works
 
-Every cell in a cellular automaton use the *information of neighboring cells* and a *fixed set of rules* to determine their own next cell state. This behavior can be implemented using convolutions and activations. A convolution is a mathematical operation that involves overlaying a small filter on an larger array to extract features by computing the sum of element-wise products between the filter and the corresponding pixel values in the image. An activation function typically is an unary function which transforms the input in a non-linear way.
+In a cellular automaton, each cell utilizes information from neighboring cells and a predefined set of rules to determine its next state. This behavior can be achieved through the use of kernel convolutions and activations. Kernel convolution is an operation that involves placing a small kernel on a larger array to extract features by calculating the sum of element-wise products between the kernel and corresponding array values. An activation function is typically a unary function that transforms the input in a non-linear fashion.
 
-The main advantage of this approach is every set of rules should be able to be implemented using these building blocks.
+The main advantage of this approach is every set of rules should be able to be implemented using these two building blocks.
 
 ### Example: Conway's Game of Life
 
-In [Game of Life (GoL)](https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Rules "Wikipedia: Rules of Conway's Game of Life") the next cell state depends in the Moore-Neighborhood of cells. This is done by using a 3x3 kernel for convolution. Since GoL is a binary system, the kernel values can be defined as following:
+In [Game of Life (GoL)](https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Rules "Wikipedia: Rules of Conway's Game of Life") the next cell state depends on the surrounding cells within the Moore-Neighborhood. This is achieved using a 3x3 kernel for convolution. Since GoL is a binary system, the kernel values can be defined as follows:
 
 ![Moore-Neighborhood * Kernel](Convolution_GameOfLife.jpeg)
 
-Each cell has 8 dead or alive neighbors and can be either alive or dead. A minimum of 5 bits (in practice 1 byte) is needed to encode every single combination possible. The lower nibble stores the number of alive neighbors and the higher nibble the current cell state.
+Each cell has 8 dead or alive neighbors and can be either alive or dead. To encode all possible combinations, a minimum of 5 bits (typically 1 byte) is needed. The lower nibble stores the number of alive neighbors, and the higher nibble represents the current cell state.
 
-In combination with the following activation function every rule of GoL is applied.
+By using the following activation function, all the rules of the Game of Life are applied.
 
 
 ```
@@ -64,9 +64,9 @@ fn life(int x)
 }
 ```
 
-### Side note
+#### Side note
 
-This process is similar to how convolutional neural networks extract relevant information from images, with the kernel values being adjusted during training to enhance the convolution's output.
+This process is similar to how many filters in image processing or convolutional neural networks operate. Both use kernels to extract relevant information.
 
 ## Dependencies
 
@@ -74,17 +74,17 @@ This process is similar to how convolutional neural networks extract relevant in
 
 #### Optional
 
-- Compiler with OpenMP support
+- Compiler supporting OpenMP
 - CUDA Toolkit
 
 The project was developed on a Windows 11 machine using MSVC (>19.35), CMake(>3.20) and CUDAToolkit (12.1).
 
-## Motive
+## Objective
 
-The goal  is to build a project with C++, CUDA and CMake to deepen my understanding with the whole ecosystem around C++. This most probably is NOT the most efficient implementation. I am deliberately not using many already build functionalities or libraries (especially for CUDA) in favor of programming out implementations myself. In the future more efficient implementations may or may not be provided.
+To build a project with C++, CUDA, and CMake to deepen my understanding of the entire C++ ecosystem. However, this implementation may not be the most efficient one <!-- blazingly fast :fire: -->, as I deliberately avoid using many pre-built functionalities or libraries (especially for CUDA) in favor of programming out implementations myself. In the future, more efficient implementations may or may not be provided.
 
 ## Further information
 
-- [EmergentGarden](https://www.youtube.com/@EmergentGarden/videos): Life Engine-Series
-- 3Blue1Brown: [But what is a convolution?](https://youtu.be/KuXjwB4LzSA)
-- Mordvintsev, et al., "[Growing Neural Cellular Automata](https://distill.pub/2020/growing-ca/)", Distill, 2020
+- EmergentGarden: [Neural Patterns](https://youtube.com/playlist?list=PL_UEf8P1IjTjT9QpNLBsFthMtauaTmOVw "YouTube Playlist")
+- 3Blue1Brown: [But what is a convolution?](https://youtu.be/KuXjwB4LzSA "YouTube Video")
+- Mordvintsev, et al., "[Growing Neural Cellular Automata](https://distill.pub/2020/growing-ca/ "Scientific paper")", Distill, 2020
