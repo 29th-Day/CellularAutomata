@@ -14,7 +14,7 @@ Copy the header into an accessible include directory. Since CellularAutomata is 
 
 ## Usage
 
-Use `#include <CellularAutomata.hpp>` in the main source file. All functions and classes are then available under the namespace 'CellularAutomata'. Examples are provided at '[example](https://github.com/29th-Day/CellularAutomata/tree/main/example)'.
+Use `#include <CellularAutomata>` in the main source file. All functions and classes are then available under the namespace 'CellularAutomata'. Examples are provided at '[example](https://github.com/29th-Day/CellularAutomata/tree/main/example)'.
 
 ### OpenMP
 
