@@ -22,7 +22,7 @@ To utilize OpenMP, enable and link OpenMP when compiling the source file. The li
 
 ### CUDA
 
-To utilize CUDA the source file must be compiled using the NVIDIA NVCC compiler. The library uses the `__CUDACC__` macro detect when CUDA is available.
+To utilize CUDA the source file must be compiled using the NVIDIA NVCC compiler. The library uses the `__CUDACC__` macro to detect when CUDA is available.
 
 ## Documentation
 
