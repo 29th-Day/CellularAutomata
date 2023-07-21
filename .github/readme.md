@@ -1,6 +1,6 @@
 # Cellular Automata
 
-The project is still in early development. However, the current version should be functional.
+The project is still in development. However, the current version should be functional.
 
 <!-- (Gif?) -->
 
