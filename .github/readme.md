@@ -6,7 +6,7 @@ The project is still in early development. However, the current version should b
 
 ## TL;DR
 
-CellularAutomata is a simple C++ library for simulating [cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton). It can simulate discrete (like [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)) or continuous spaces using convolutions and activations.
+CellularAutomata is a simple C++ library for simulating [cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton "Wikipedia: Cellular Automaton"). It can simulate [discrete](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life "e.g. Conway's Game of Life") or continuous spaces using convolutions and activations.
 
 ## Installation
 
@@ -22,7 +22,7 @@ To utilize OpenMP, enable and link OpenMP when compiling the source file. The li
 
 ### CUDA
 
-To utilize CUDA the source file must be compiled using Nvidias NVCC compiler. The library uses the `__CUDACC__` macro detect when CUDA is available.
+To utilize CUDA the source file must be compiled using the NVIDIA NVCC compiler. The library uses the `__CUDACC__` macro detect when CUDA is available.
 
 ## Documentation
 
@@ -37,13 +37,14 @@ The main advantage of this approach is every set of rules should be able to be i
 
 ### Example: Conway's Game of Life
 
-In Game of Life (GoL) the next cell state depends in the Moore-Neighborhood of cells. This is done by using a 3x3 kernel for convolution. Since GoL is a binary system, the kernel values can be defined as following:
+In [Game of Life (GoL)](https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Rules "Wikipedia: Rules of Conway's Game of Life") the next cell state depends in the Moore-Neighborhood of cells. This is done by using a 3x3 kernel for convolution. Since GoL is a binary system, the kernel values can be defined as following:
 
 ![Moore-Neighborhood * Kernel](Convolution_GameOfLife.jpeg)
 
 Each cell has 8 dead or alive neighbors and can be either alive or dead. A minimum of 5 bits (in practice 1 byte) is needed to encode every single combination possible. The lower nibble stores the number of alive neighbors and the higher nibble the current cell state.
 
 In combination with the following activation function every rule of GoL is applied.
+
 
 ```
 fn life(int x)
@@ -63,24 +64,20 @@ fn life(int x)
 }
 ```
 
-The rules of GoL can be found on the web, e.g. [Wikipedia](https://en.wikipedia.org/wiki/Conway's_Game_of_Life#Rules)
-
 ### Side note
 
 This process is similar to how convolutional neural networks extract relevant information from images, with the kernel values being adjusted during training to enhance the convolution's output.
 
-## Build
+## Dependencies
 
-Software and versions used by myself. Lower versions may be also working.
+- Compiler supporting C++11
 
-- Windows 11
-- CMake (> 3.20)
-- MSVC (> 19.35)
-
-Optional
+#### Optional
 
 - Compiler with OpenMP support
-- CUDA Toolkit (12.1)
+- CUDA Toolkit
+
+The project was developed on a Windows 11 machine using MSVC (>19.35), CMake(>3.20) and CUDAToolkit (12.1).
 
 ## Motive
 

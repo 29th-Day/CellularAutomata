@@ -37,7 +37,6 @@ int main(int argc, char* argv[])
     State<float> stateCPU(HEIGHT, WIDTH, sf, Device::CPU);
     Kernel<float> kernel(3, kf, Device::CUDA);
 
-
     States::Objects::Bipole1(&stateCPU, WIDTH / 2, HEIGHT / 2);
 
     stateCPU.copyTo(&stateGPU);

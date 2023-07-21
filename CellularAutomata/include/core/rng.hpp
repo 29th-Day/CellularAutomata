@@ -14,25 +14,17 @@ namespace CellularAutomata
 {
     /**
      * @brief Global random number generator wrapping the std::random utilities
-     * @attention Since `random` works using *static* variables, each translation unit will have a different RNG state
-     * @note The first seed used before calling `init()` is random
+     * @attention Since `random` works using *static* variables, each translation unit will have its own 'random' state
+     * @note The first seed used before calling 'seed()' is random
      */
     namespace random
     {
         /**
-         * @brief Sets a random seed for the random number generator
-         *
-         * @return seed used
-         */
-        unsigned int init();
-
-        /**
          * @brief Sets the given seed for the random number generator
          *
          * @param seed seed to use
-         * @return seed used
          */
-        unsigned int init(unsigned int seed);
+        void seed(unsigned int seed);
 
         /**
          * @brief Returns a random number of given type on the range [min, max]
