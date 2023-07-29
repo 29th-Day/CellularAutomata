@@ -9,12 +9,14 @@
  *
  */
 
-#include "CellularAutomata.h"
+#include <CellularAutomata>
 
 #include "display.h"
 #include "timeit.h"
 
-int main(int argc, char *argv[])
+using namespace CellularAutomata;
+
+int main(int argc, char* argv[])
 {
     const int HEIGHT = 100;
     const int WIDTH = 100;
@@ -23,17 +25,16 @@ int main(int argc, char *argv[])
     const bool RECURSIVE = true;
     const unsigned int SEED = 0xAABBCC;
 
-    CellularAutomata::InitRandom(SEED);
+    random::seed(SEED);
 
-    State<float> state;
-    Kernel<float> kernel;
+    stateFunc<float>         sf = nullptr; // States::normal
+    kernelFunc<float>        kf = Kernels::life;
+    Activations::life<float> af;
 
-    stateFunc<float> sf = States::normal;
-    kernelFunc<float> kf = Kernels::life;
-    Activations::OpCode af = Activations::life;
+    State<float> state(HEIGHT, WIDTH, sf, Device::CPU);
+    Kernel<float> kernel(3, kf, Device::CPU);
 
-    CellularAutomata::InitState(&state, HEIGHT, WIDTH, sf, Device::CPU);
-    CellularAutomata::InitKernel(&kernel, 3, kf, Device::CPU);
+    States::Objects::Glider(&state, 5, 5);
 
     Display display = Display(HEIGHT, WIDTH, SCALE, FPS);
     while (display.run())
@@ -42,12 +43,9 @@ int main(int argc, char *argv[])
         {
             display.draw(state.curr);
 
-            timeit(CellularAutomata::Epoch(&state, &kernel, af, RECURSIVE));
+            timeit(Epoch(&state, &kernel, af, RECURSIVE));
         }
     }
-
-    CellularAutomata::DestroyState(&state);
-    CellularAutomata::DestroyKernel(&kernel);
 
     return 0;
 }
