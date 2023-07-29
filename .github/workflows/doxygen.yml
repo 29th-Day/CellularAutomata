@@ -27,8 +27,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Print
-        run: echo "Okay"
       - name: Get repository
         uses: actions/checkout@v3
       - name: Install doxygen
@@ -41,24 +39,23 @@ jobs:
           name: docs
           path: ./docs
       
-  # deploy:
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Load artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: docs
-  #         path: ./docs
-  #     - name: Setup Pages
-  #       uses: actions/configure-pages@v3
-  #     - name: Upload artifact
-  #       uses: actions/upload-pages-artifact@v2
-  #       with:
-  #         # Upload entire repository
-  #         path: './docs'
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v2
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+          path: ./docs
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './docs/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
