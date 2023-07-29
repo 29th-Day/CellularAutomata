@@ -26,7 +26,7 @@ To utilize CUDA the source file must be compiled using the NVIDIA NVCC compiler.
 
 ## Documentation
 
-Documentation can be found on the [repository wiki page](https://github.com/29th-Day/CellularAutomata/wiki) and as comments on the respective functions.
+The doxygen documentation can be found on the [GitHub Page](https://29th-day.github.io/CellularAutomata/) and as comments on the respective functions.
 
 
 ## How it works
