@@ -31,11 +31,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Install doxygen
         run: sudo apt-get install -y doxygen
-      - name: Setup doxygen-awesome
-        run: |
-          git clone https://github.com/jothepro/doxygen-awesome-css.git
-          doxygen -w html doxygen_awesome_header.html not_used.html not_used.css
-          sed -i '/<\/head>/i <script type="text/javascript" src="$relpath^doxygen-awesome-darkmode-toggle.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-fragment-copy-button.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-paragraph-link.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-interactive-toc.js"></script><script type="text/javascript">DoxygenAwesomeDarkModeToggle.init();DoxygenAwesomeFragmentCopyButton.init();DoxygenAwesomeParagraphLink.init();DoxygenAwesomeInteractiveToc.init();</script>' doxygen_awesome_header.txt
+      - name: Download doxygen-awesome
+        run: git clone https://github.com/jothepro/doxygen-awesome-css.git
+      - name: Create modified header 1
+        run: doxygen -w html doxygen_awesome_header.html not_used.html not_used.css
+      - name: Create modified header 2
+        run: sed -i '/<\/head>/i <script type="text/javascript" src="$relpath^doxygen-awesome-darkmode-toggle.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-fragment-copy-button.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-paragraph-link.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-interactive-toc.js"></script><script type="text/javascript">DoxygenAwesomeDarkModeToggle.init();DoxygenAwesomeFragmentCopyButton.init();DoxygenAwesomeParagraphLink.init();DoxygenAwesomeInteractiveToc.init();</script>' doxygen_awesome_header.txt
       - name: Build docs
         run: doxygen .doxygen
       - name: Save artifact
