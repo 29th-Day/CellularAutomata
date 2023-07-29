@@ -7,10 +7,19 @@
 #endif
 
 /**
- * @brief Macro for defining custom activations. Shorthand for creating a class and overloading the 'operator()'-function.
+ * @defgroup custom_activations Custom Activations
+ *
+ * Shorthand for creating a class and overloading the 'operator()'-function.
+ * @note Functors are needed because CUDA function pointers are not (easily) accessible from host code.
+ *
+ * @{
+ */
+
+ /**
+ * @brief Macro for defining custom activations
  * @param name Functor name
  * @param body Function body (input as parameter 'x')
- * @note Functors are needed because CUDA function pointers are not (easily) accessible from host code
+ *
  */
 #define ACTIVATION(name, body)                      \
     template <typename T>                           \
@@ -18,10 +27,15 @@
     {                                               \
     public:                                         \
         cudaFn T operator()(const T x) const body   \
-    };                                              \
+    };
+
+ /** @} */ // End of custom_activations group
 
 namespace CellularAutomata
 {
+    /**
+     * @brief Commonly used activation functions
+     */
     namespace Activations
     {
         /**
@@ -33,6 +47,11 @@ namespace CellularAutomata
         class normal
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -45,6 +64,11 @@ namespace CellularAutomata
         class life
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -57,6 +81,11 @@ namespace CellularAutomata
         class sigmoid
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -69,6 +98,11 @@ namespace CellularAutomata
         class tanh
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -81,6 +115,11 @@ namespace CellularAutomata
         class sin
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -93,6 +132,11 @@ namespace CellularAutomata
         class cos
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
 
@@ -105,6 +149,11 @@ namespace CellularAutomata
         class tan
         {
         public:
+            /**
+             * @brief Functor call
+             * @param x input
+             * @return transformed x
+             */
             cudaFn T operator()(const T x) const;
         };
     }

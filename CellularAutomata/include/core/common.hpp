@@ -26,6 +26,9 @@ template <typename T>
  */
 using kernelFunc = void (*)(T*, const int);
 
+/**
+ * @brief Main namespace
+ */
 namespace CellularAutomata
 {
     /**
@@ -33,22 +36,47 @@ namespace CellularAutomata
      */
     enum Device
     {
+        /**
+         * @brief Allocation & computation on CPU/RAM
+         */
         CPU,
+        /**
+         * @brief Allocation & computation on NVIDIA GPU via CUDA
+         */
         CUDA,
     };
 
     /**
-     * @brief Class for handeling double buffered 2D grids.
+     * @brief 2D buffered matrices
      * @tparam T type
      */
     template <typename T>
     class State
     {
     public:
+        /**
+         * @brief Current 2D Matrix buffer
+         */
         T* curr;
+
+        /**
+         * @brief Next 2D Matrix buffer
+         */
         T* next;
+
+        /**
+         * @brief Height of 2D Matrix
+         */
         const int height;
+
+        /**
+         * @brief Width of 2D Matrix
+         */
         const int width;
+
+        /**
+         * @brief Computational device
+         */
         const Device device;
 
         /**
@@ -92,12 +120,26 @@ namespace CellularAutomata
         void freeCUDA();
     };
 
+    /**
+     * @brief 2D convolution kernel
+     *
+     * @tparam T type
+     */
     template <typename T>
     class Kernel
     {
     public:
+        /**
+         * @brief 2D Matrix
+         */
         T* kernel;
+        /**
+         * @brief Side length of matrix
+         */
         const int size;
+        /**
+         * @brief Computational device
+         */
         const Device device;
 
         /**

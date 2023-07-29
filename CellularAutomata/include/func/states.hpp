@@ -4,6 +4,9 @@
 
 namespace CellularAutomata
 {
+    /**
+     * @brief Commonly used state initializations
+     */
     namespace States
     {
         /**
