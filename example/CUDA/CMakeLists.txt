@@ -24,7 +24,7 @@ endif()
 target_link_libraries(${TARGET}
     PRIVATE
     # CellularAutomata
-    ${PROJECT_NAME}
+    CellularAutomata
     # OpenMP
     $<IF:$<TARGET_EXISTS:OpenMP::OpenMP_CXX>, OpenMP::OpenMP_CXX, >
 )

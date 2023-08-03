@@ -11,11 +11,12 @@ include(doctest)
 # build executable
 add_executable(${TARGET} unittest.cpp)
 
-# link Doctest
-target_link_libraries(${TARGET} PRIVATE doctest::doctest)
-
-# link CellularAutomata
-target_link_libraries(${TARGET} PRIVATE ${PROJECT_NAME})
+target_link_libraries(${TARGET} PRIVATE
+    # CellularAutomata
+    CellularAutomata
+    # doctest
+    doctest::doctest
+)
 
 # run tests
 enable_testing()

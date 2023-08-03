@@ -3,9 +3,10 @@ name: Deploy doxygen to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "doxygen"]
+    branches: ["main"]
     paths:
       - CellularAutomata/**
+      - docs/md/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,14 +31,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Install doxygen
         run: sudo apt-get install -y doxygen
-      - name: Clone doxygen-awesome
-        run: git clone https://github.com/jothepro/doxygen-awesome-css.git
-      - name: Create modified header 1
-        run: doxygen -w html doxygen_awesome_header.html not_used.html not_used.css
-      - name: Create modified header 2
-        run: sed -i '/<\/head>/i <script type="text/javascript" src="$relpath^doxygen-awesome-darkmode-toggle.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-fragment-copy-button.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-paragraph-link.js"></script><script type="text/javascript" src="$relpath^doxygen-awesome-interactive-toc.js"></script><script type="text/javascript" defer>DoxygenAwesomeDarkModeToggle.init();DoxygenAwesomeFragmentCopyButton.init();DoxygenAwesomeParagraphLink.init();DoxygenAwesomeInteractiveToc.init();</script>' doxygen_awesome_header.html
+      - name: Change directory
+        run: cd docs
       - name: Build docs
-        run: doxygen .doxygen
+        run: doxygen Doxyfile
       - name: Save artifact
         uses: actions/upload-artifact@v3
         with:

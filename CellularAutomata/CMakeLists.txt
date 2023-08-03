@@ -1,4 +1,4 @@
-set(TARGET ${PROJECT_NAME})
+set(TARGET "CellularAutomata")
 
 set(FILES
     "include/core/common.hpp"
