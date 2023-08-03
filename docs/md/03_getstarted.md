@@ -12,6 +12,20 @@ CellularAutomata::Kernel<float> kernel(3, CellularAutomata::Kernels::ones, Cellu
 CellularAutomata::Epoch(&state, &kernel, CellularAutomata::Activations::sin, true);
 ~~~
 
+<!-- 
+```
+#include <CellularAutomata>
+
+using namespace CellularAutomata;
+
+State<float> state(10, 10, States::normal, Device::CPU);
+Kernel<float> kernel(3, 3, Kernels::ones, Device::CPU);
+
+Epoch(&state, &kernel, Activations::sin, true);
+
+```
+-->
+
 Let's go line by line.
 
 ``` #include <CellularAutomata>```
