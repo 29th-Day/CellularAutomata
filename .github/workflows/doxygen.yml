@@ -3,7 +3,7 @@ name: Deploy doxygen to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["main", "doxygen"]
     paths:
       - CellularAutomata/**
       - docs/md/**
