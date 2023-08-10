@@ -1,35 +1,57 @@
-Getting started {#getstart}
+Getting Started {#getstart}
 ===
 
-A minimal example is shown here.
+This guide provides a step-by-step introduction to using the %CellularAutomata library. We'll walk through a minimal example to help you understand the basic concepts and usage.
 
-~~~{.cpp}
+```cpp
 #include <CellularAutomata>
 
-CellularAutomata::State<float> state(10, 10, CellularAutomata::States::normal, CellularAutomata::Device::CPU);
-CellularAutomata::Kernel<float> kernel(3, CellularAutomata::Kernels::ones, CellularAutomata::Device::CPU);
+using namespace CellularAutomata;
 
-CellularAutomata::Epoch(&state, &kernel, CellularAutomata::Activations::sin, true);
-~~~
+int main() {
+    State<float> state(10, 10, States::normal, Device::CPU);
+    Kernel<float> kernel(3, Kernels::ones, Device::CPU);
 
-Let's go line by line.
+    Epoch(&state, &kernel, Activations::sin, true);
 
-``` #include <CellularAutomata>```
+    return 0;
+}
+```
 
-is the standard include statement. The library has a top-level pseudo file which imports everything.
+Let's break down each line of the example code:
 
-``` using namespace CellularAutomata;```
+```cpp
+#include <CellularAutomata>
+```
 
-shortens the namespace for easier use.
+This line is the standard include statement. The library has a top-level pseudo file that imports all necessary components.
 
-``` State<float> state(10, 10, States::normal, Device::CPU);```
+```cpp
+using namespace CellularAutomata;
+```
 
-creates a state of a cellular automaton. The grid has a size of 10x10 and, is initialized with values in the range [0, 1], and is allocated on the CPU.
+This line shortens the namespace to make subsequent code more concise and readable.
 
-``` Kernel<float> kernel(3, 3, Kernels::ones, Device::CPU);```
+```cpp
+State<float> state(10, 10, States::normal, Device::CPU);
+```
 
-creates a kernel for applying the rules of the cellular automaton. It is a 3x3 matrix, is initialized with ones, and is allocated on the CPU.
+Here, we create a `State` object representing the cellular automaton's state. We specify a grid size of 10x10, initialize the values in the range [0, 1], and allocate the state on the CPU.
 
-``` Epoch(&state, &kernel, Activations::sin, true);```
+```cpp
+Kernel<float> kernel(3, Kernels::ones, Device::CPU);
+```
 
-runs a single epoch of the cellular automaton. It takes a pointer to the state and kernel together with an activation function and the behavior at the borders. 
+This line creates a `Kernel` object that defines the rules for the cellular automaton's evolution. We use a 3x3 matrix kernel initialized with ones, and it's also allocated on the CPU.
+
+```cpp
+Epoch(&state, &kernel, Activations::sin, true);
+```
+
+The `Epoch` function runs a single iteration of the cellular automaton. It takes pointers to the state and kernel, an activation function (`sin` in this case), and a boolean flag indicating the border behavior (self looping).
+
+In summary, this example demonstrates the fundamental steps to set up and run a basic cellular automaton simulation using the %CellularAutomata library. As you become more familiar with the library, you can explore more advanced configurations and features to create complex simulations.
+
+### Further examples
+
+More complex [examples](https://github.com/29th-Day/CellularAutomata/tree/main/example) are available in the repository.
