@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20.0)
-project(CellularAutomata VERSION 0.3.0 LANGUAGES CXX HOMEPAGE_URL https://github.com/29th-Day/CellularAutomata)
+project(CellularAutomata
+    VERSION 0.3.0
+    LANGUAGES CXX
+    HOMEPAGE_URL "https://github.com/29th-Day/CellularAutomata"
+)
 
 option(BUILD_EXAMPLE "Build examples?" ON)
 option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
