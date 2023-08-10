@@ -30,7 +30,10 @@ jobs:
       - name: Get repository
         uses: actions/checkout@v3
       - name: Install doxygen
-        run: sudo apt-get install -y doxygen
+        run: |
+          sudo wget https://doxygen.nl/files/doxygen-1.9.7.linux.bin.tar.gz
+          sudo tar -xvf doxygen-1.9.7.linux.bin.tar.gz
+          sudo cp doxygen-1.9.7/bin/doxygen /usr/local/bin/
       - name: Get doxygen-awesome
         run: git submodule update --init --recursive
       - name: Build docs

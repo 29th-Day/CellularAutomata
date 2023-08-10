@@ -1,3 +1,5 @@
+/** @file cuda.cuh */
+
 #pragma once
 
 #include "../core/common.hpp"
@@ -8,7 +10,7 @@ namespace CellularAutomata
     {
         /**
          * @brief Allocated memory on a CUDA device
-         * 
+         *
          * @param array pointer to deviceArray
          * @param bytes allocation size in bytes
          */
@@ -17,7 +19,7 @@ namespace CellularAutomata
         /**
          * @brief Allocated memory on the host device (CPU)
          * @note Allocates "page-locked memory" which is slower in allocation but faster in transmission between devices and host. Should be used for memory which is often transfered
-         * 
+         *
          * @param arrayPtr pointer to hostArray
          * @param bytes allocation size in bytes
          */
@@ -25,7 +27,7 @@ namespace CellularAutomata
 
         /**
          * @brief  Frees memory on a CUDA device
-         * 
+         *
          * @param array deviceArray to free
          */
         void freeCUDA(void* array);
@@ -34,7 +36,7 @@ namespace CellularAutomata
          * @brief Frees memory on the host device (CPU)
          * @attention Do NOT use on regular allocations
          * @note Frees "page-locked memory" allocated with CUDA functions
-         * 
+         *
          * @param array hostArray to free
          */
         void freeHost(void* array);
@@ -43,7 +45,7 @@ namespace CellularAutomata
          * @brief Memcopy between devices and host
          * @attention Size is assumed to be equal
          * @note Host memory can be allocated using regular allocations
-         * 
+         *
          * @param src input array to copy from
          * @param from computational device where input lives
          * @param dst output array to copy to
@@ -54,9 +56,9 @@ namespace CellularAutomata
 
         /**
          * @brief Call the CUDA kernel to run a single epoch on a given state using a kernel
-         * 
+         *
          * @tparam T type
-         * @tparam Activation functor 
+         * @tparam Activation functor
          * @param input current state array
          * @param kernel kernel for convolution
          * @param output next state array
