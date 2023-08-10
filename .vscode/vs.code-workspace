@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+		"liveServer.settings.root": "/docs/build/html",
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Doxygen",
+				"type": "shell",
+				"command": "cls; cd docs; doxygen Doxyfile",
+				"problemMatcher": []
+			},
+			{
+				"label": "CPack",
+				"type": "shell",
+				"command": "cls; cd build; cpack",
+				"problemMatcher": []
+			}
+		]
+	}
+}
