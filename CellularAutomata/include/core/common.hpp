@@ -33,6 +33,7 @@ namespace CellularAutomata
 {
     /**
      * @brief Computational device
+     * @note A object allocated on a specific device can only interact with objects on the same device.
      */
     enum Device
     {
