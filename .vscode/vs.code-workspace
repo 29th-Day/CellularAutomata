@@ -22,6 +22,18 @@
 				"type": "shell",
 				"command": "cls; cd build; cpack",
 				"problemMatcher": []
+			},
+			{
+				"label": "CPU Example",
+				"type": "shell",
+				"command": "./build/example/CPU/Debug/example_cpu.exe",
+				"problemMatcher": []
+			},
+			{
+				"label": "GPU Example",
+				"type": "shell",
+				"command": "./build/example/GPU/Debug/example_gpu.exe",
+				"problemMatcher": []
 			}
 		]
 	}
