@@ -81,7 +81,7 @@ The project was developed on a Windows 11 machine using MSVC (>19.35), CMake(>3.
 
 ## Objective
 
-To build a project with C++, CUDA, and CMake to deepen my understanding of the entire C++ ecosystem. However, this implementation may not be the most efficient one <!-- blazingly fast :fire: -->, as I deliberately avoid using many pre-built functionalities or libraries (especially for CUDA) in favor of programming out implementations myself. In the future, more efficient implementations may or may not be provided.
+To build a project with C++, CUDA, and CMake to deepen my understanding of the entire C++ ecosystem. Implementations may not be the most efficient ones <!-- blazingly fast :fire: -->, as I deliberately avoid using many pre-built functionalities or libraries (especially for CUDA) in favor of programming out implementations myself. In the future, more efficient implementations may or may not be provided.
 
 ## Further information
 
