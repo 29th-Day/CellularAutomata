@@ -11,8 +11,9 @@ namespace CellularAutomata
         /**
          * @brief Allocated memory on a CUDA device
          *
-         * @param array pointer to deviceArray
+         * @param arrayPtr pointer to deviceArray
          * @param bytes allocation size in bytes
+         * @throw CudaRuntimeError
          */
         void allocateCUDA(void** arrayPtr, size_t bytes);
 
@@ -22,6 +23,7 @@ namespace CellularAutomata
          *
          * @param arrayPtr pointer to hostArray
          * @param bytes allocation size in bytes
+         * @throw CudaRuntimeError
          */
         void allocateHost(void** arrayPtr, size_t bytes);
 
@@ -29,6 +31,7 @@ namespace CellularAutomata
          * @brief  Frees memory on a CUDA device
          *
          * @param array deviceArray to free
+         * @throw CudaRuntimeError
          */
         void freeCUDA(void* array);
 
@@ -38,6 +41,7 @@ namespace CellularAutomata
          * @note Frees "page-locked memory" allocated with CUDA functions
          *
          * @param array hostArray to free
+         * @throw CudaRuntimeError
          */
         void freeHost(void* array);
 
@@ -51,6 +55,7 @@ namespace CellularAutomata
          * @param dst output array to copy to
          * @param to computational device where output lives
          * @param bytes allocation size in bytes
+         * @throw CudaRuntimeError
          */
         void copyCUDA(void* src, Device from, void* dst, Device to, size_t bytes);
 
@@ -67,6 +72,7 @@ namespace CellularAutomata
          * @param w width of state array
          * @param s size of kernel
          * @param r grid recursion enabled
+         * @throw CudaRuntimeError
          */
         template <typename T, typename Activation>
         void epoch(

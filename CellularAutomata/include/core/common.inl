@@ -1,4 +1,5 @@
 #include "common.hpp"
+#include "exceptions.hpp"
 
 #ifdef __CUDACC__
 #include "../cuda/cuda.cuh"
@@ -31,6 +32,9 @@ namespace CellularAutomata
     #ifdef __CUDACC__
         initCUDA(fn);
     #else
+        if (device == Device::CUDA)
+            throw exception::DeviceNotAvailable("CUDA");
+
         initCPU(fn);
     #endif
     }
@@ -115,6 +119,9 @@ namespace CellularAutomata
     template <typename T>
     void State<T>::copyTo(State<T>* to)
     {
+        if (height != to->height && width != to->width)
+            throw exception::ShapeMismatch();
+
         if (device == Device::CUDA || to->device == Device::CUDA)
         {
         #ifdef __CUDACC__
@@ -164,6 +171,8 @@ namespace CellularAutomata
         {
         #ifdef __CUDACC__
             initCUDA(fn);
+        #else
+            throw exception::DeviceNotAvailable("CUDA");
         #endif
         }
         else
@@ -229,6 +238,9 @@ namespace CellularAutomata
     template <typename T>
     void Kernel<T>::copyTo(Kernel<T>* to)
     {
+        if (size != to->size)
+            throw exception::ShapeMismatch();
+
         if (device == Device::CUDA)
         {
         #ifdef __CUDACC__

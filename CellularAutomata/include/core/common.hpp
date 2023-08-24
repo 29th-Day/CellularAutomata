@@ -87,6 +87,7 @@ namespace CellularAutomata
          * @param width width of the grid world
          * @param fn function to fill the current state buffer. May be 'nullptr'
          * @param device computational device
+         * @throw DeviceNotAvailable
          */
         State(int height, int width, stateFunc<T> fn, Device device);
 
@@ -96,11 +97,9 @@ namespace CellularAutomata
         ~State();
 
         /**
-         * @brief Copy the own current state buffer to another current state buffer
-         * @attention Height and width are assumed to be equal
-         * @note States can be on different devices
-         *
+         * @brief Copy the own current state buffer to another current state buffer across devices
          * @param to other state
+         * @throw ShapeMismatch
          */
         void copyTo(State<T>* to);
 
@@ -149,6 +148,7 @@ namespace CellularAutomata
          * @param size side length of kernel (always square)
          * @param fn function to fill the kernel. May be 'nullptr'
          * @param device computational device
+         * @throw DeviceNotAvailable
          */
         Kernel(int size, kernelFunc<T> fn, Device device);
 
@@ -158,11 +158,9 @@ namespace CellularAutomata
         ~Kernel();
 
         /**
-         * @brief Copy the own kernel array to another kernel array
-         * @attention Size is assumed to be equal
-         * @note Kernels may be on different devices
-         *
+         * @brief Copy the own kernel array to another kernel array across devices
          * @param to other kernel
+         * @throw ShapeMismatch
          */
         void copyTo(Kernel<T>* to);
 
