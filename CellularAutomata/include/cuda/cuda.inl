@@ -2,13 +2,14 @@
 
 #include "cuda.cuh"
 #include "../core/common.hpp"
+#include "../core/exceptions.hpp"
 
 #include <iostream>
 
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
-#define cudaCheck(a) {if (a != cudaSuccess) {std::cout << "CUDA error (" << __FILE__ << ", " << __LINE__ << "): " << cudaGetErrorString(cudaGetLastError()) << std::endl;}}
+#define cudaCheck(a) {if (a != cudaSuccess) {throw CellularAutomata::exception::CudaRuntimeError(cudaGetErrorString(cudaGetLastError()));}}
 
 #define TILE_SIZE 32
 
@@ -143,32 +144,7 @@ namespace CellularAutomata
 
         void copyCUDA(void* src, Device from, void* dst, Device to, size_t bytes)
         {
-            cudaMemcpyKind kind;
-
-            if (from == Device::CUDA)
-            {
-                if (to == Device::CUDA)
-                {
-                    kind = cudaMemcpyKind::cudaMemcpyDeviceToDevice;
-                }
-                else
-                {
-                    kind = cudaMemcpyKind::cudaMemcpyDeviceToHost;
-                }
-            }
-            else
-            {
-                if (to == Device::CUDA)
-                {
-                    kind = cudaMemcpyKind::cudaMemcpyHostToDevice;
-                }
-                else
-                {
-                    kind = cudaMemcpyKind::cudaMemcpyHostToHost;
-                }
-            }
-
-            cudaCheck(cudaMemcpy(dst, src, bytes, kind));
+            cudaCheck(cudaMemcpy(dst, src, bytes, cudaMemcpyKind::cudaMemcpyDefault));
         }
 
         template <typename T, typename Activation>

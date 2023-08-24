@@ -38,7 +38,6 @@ namespace CellularAutomata
         {
             /**
              * @brief Copy an (small) array into another (large) array at a given position
-             * @attention No checks are done if the size is valid at the given position
              * @note The copy is top-left aligned
              *
              * @tparam T type
@@ -47,8 +46,10 @@ namespace CellularAutomata
              * @param src_w source width
              * @param dst large destination array
              * @param dst_w destination width
+             * @param dst_h destination height
              * @param y Y insert position
              * @param x X insert position
+             * @throw OutOfBounds
              */
             template <typename T>
             inline void copyInto(

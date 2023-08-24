@@ -1,5 +1,6 @@
 #include "states.hpp"
 #include "../core/rng.hpp"
+#include "../core/exceptions.hpp"
 
 namespace CellularAutomata
 {
@@ -35,6 +36,9 @@ namespace CellularAutomata
             template <typename T>
             inline void copyInto(T* src, const unsigned int src_h, const unsigned int src_w, T* dst, const unsigned int dst_h, const unsigned int dst_w, const unsigned int y, const unsigned int x)
             {
+                if (src_h + y >= src_h || src_w + x >= src_w)
+                    throw exception::OutOfBounds();
+
                 int i = 0;
                 for (int _y = y; _y < y + src_h; _y++)
                 {
