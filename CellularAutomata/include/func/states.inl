@@ -33,7 +33,7 @@ namespace CellularAutomata
         namespace Objects
         {
             template <typename T>
-            inline void copyInto(T* src, const int src_h, const int src_w, T* dst, const int dst_w, const int y, const int x)
+            inline void copyInto(T* src, const unsigned int src_h, const unsigned int src_w, T* dst, const unsigned int dst_h, const unsigned int dst_w, const unsigned int y, const unsigned int x)
             {
                 int i = 0;
                 for (int _y = y; _y < y + src_h; _y++)
@@ -47,18 +47,18 @@ namespace CellularAutomata
             }
 
             template <typename T>
-            void Glider(State<T>* state, const int x, const int y)
+            void Glider(State<T>* state, const unsigned int x, const unsigned int y)
             {
                 T pattern[] = {
                     0, 1, 0,
                     0, 0, 1,
                     1, 1, 1 };
 
-                copyInto(pattern, 3, 3, state->curr, state->width, y, x);
+                copyInto(pattern, 3, 3, state->curr, state->height, state->width, y, x);
             }
 
             template <typename T>
-            void Spaceship(State<T>* state, const int x, const int y)
+            void Spaceship(State<T>* state, const unsigned int x, const unsigned int y)
             {
                 T pattern[] = {
                     0, 1, 1, 1, 1,
@@ -66,11 +66,11 @@ namespace CellularAutomata
                     0, 0, 0, 0, 1,
                     1, 0, 0, 1, 0 };
 
-                copyInto(pattern, 4, 5, state->curr, state->width, y, x);
+                copyInto(pattern, 4, 5, state->curr, state->height, state->width, y, x);
             }
 
             template <typename T>
-            void Bipole1(State<T>* state, const int x, const int y)
+            void Bipole1(State<T>* state, const unsigned int x, const unsigned int y)
             {
                 T pattern[] = {
                     1, 1, 0, 0,
@@ -78,11 +78,11 @@ namespace CellularAutomata
                     0, 0, 0, 1,
                     0, 0, 1, 1 };
 
-                copyInto(pattern, 4, 4, state->curr, state->width, y, x);
+                copyInto(pattern, 4, 4, state->curr, state->height, state->width, y, x);
             }
 
             template <typename T>
-            void Bipole2(State<T>* state, const int x, const int y)
+            void Bipole2(State<T>* state, const unsigned int x, const unsigned int y)
             {
                 T pattern[] = {
                     1, 1, 0, 0, 0,
@@ -91,18 +91,18 @@ namespace CellularAutomata
                     0, 0, 0, 0, 1,
                     0, 0, 0, 1, 1 };
 
-                copyInto(pattern, 5, 5, state->curr, state->width, y, x);
+                copyInto(pattern, 5, 5, state->curr, state->height, state->width, y, x);
             }
 
             template <typename T>
-            void r_Pentomino(State<T>* state, const int x, const int y)
+            void r_Pentomino(State<T>* state, const unsigned int x, const unsigned int y)
             {
                 T pattern[] = {
                     0, 1, 1,
                     1, 1, 0,
                     0, 1, 0 };
 
-                copyInto(pattern, 3, 3, state->curr, state->width, y, x);
+                copyInto(pattern, 3, 3, state->curr, state->height, state->width, y, x);
             }
         }
     }

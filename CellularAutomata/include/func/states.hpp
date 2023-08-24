@@ -51,7 +51,10 @@ namespace CellularAutomata
              * @param x X insert position
              */
             template <typename T>
-            inline void copyInto(T* src, const int src_h, const int src_w, T* dst, const int dst_w, const int y, const int x);
+            inline void copyInto(
+                T* src, const unsigned int src_h, const unsigned int src_w,
+                T* dst, const unsigned int dst_h, const unsigned int dst_w,
+                const unsigned int y, const unsigned int x);
 
             /**
              * @brief Copies a glider (3x3) into given position (https://conwaylife.com/wiki/Glider)
@@ -64,7 +67,7 @@ namespace CellularAutomata
              * @param y Y-position
              */
             template <typename T>
-            void Glider(State<T>* state, const int x, const int y);
+            void Glider(State<T>* state, const unsigned int x, const unsigned int y);
 
             /**
              * @brief Copies a spaceship (4x5) into given position (https://conwaylife.com/wiki/Spaceship)
@@ -77,7 +80,7 @@ namespace CellularAutomata
              * @param y Y-position
              */
             template <typename T>
-            void Spaceship(State<T>* state, const int x, const int y);
+            void Spaceship(State<T>* state, const unsigned int x, const unsigned int y);
 
             /**
              * @brief Copies a bipole (4x4) into given position (https://conwaylife.com/wiki/Bipole)
@@ -90,7 +93,7 @@ namespace CellularAutomata
              * @param y Y-position
              */
             template <typename T>
-            void Bipole1(State<T>* state, const int x, const int y);
+            void Bipole1(State<T>* state, const unsigned int x, const unsigned int y);
 
             /**
              * @brief Copies a (alternative) bipole (5x5) into given position (https://conwaylife.com/wiki/Bipole)
@@ -103,7 +106,7 @@ namespace CellularAutomata
              * @param y Y-position
              */
             template <typename T>
-            void Bipole2(State<T>* state, const int x, const int y);
+            void Bipole2(State<T>* state, const unsigned int x, const unsigned int y);
 
             /**
              * @brief Copies a R-pentomino (3x3) into given position (https://conwaylife.com/wiki/R-pentomino)
@@ -116,7 +119,7 @@ namespace CellularAutomata
              * @param y Y-position
              */
             template <typename T>
-            void r_Pentomino(State<T>* state, const int x, const int y);
+            void r_Pentomino(State<T>* state, const unsigned int x, const unsigned int y);
         }
     }
 
