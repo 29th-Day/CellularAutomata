@@ -1,5 +1,6 @@
 #include "epoch.hpp"
 #include "cpu.hpp"
+#include "exceptions.hpp"
 
 #ifdef __CUDACC__
 #include "../cuda/cuda.cuh"
@@ -12,6 +13,9 @@ namespace CellularAutomata
     template <typename T, typename Activation>
     void Epoch(State<T>* state, Kernel<T>* kernel, Activation activation, bool recursive)
     {
+        if (state->device != kernel->device)
+            throw exception::DevicesUnequal("Devices of state and kernel are unequal");
+
         if (state->device == Device::CUDA)
         {
         #ifdef __CUDACC__
@@ -30,5 +34,5 @@ namespace CellularAutomata
         }
 
         state->swap();
+        }
     }
-}
