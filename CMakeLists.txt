@@ -9,14 +9,13 @@ option(BUILD_EXAMPLE "Build examples?" ON)
 option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
 option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" OFF)
 
+
 option(USE_OPENMP "Use OpenMP?" ON)
-option(USE_CUDA "Use CUDA?" OFF)
+option(USE_CUDA "Use CUDA?" ON)
 
 # development only, not actually nessecary but IntelliSense wouldn't find CUDA otherwise
-if(USE_CUDA)
-    find_package(CUDAToolkit REQUIRED)
-    include_directories(${CUDAToolkit_INCLUDE_DIRS})
-endif()
+find_package(CUDAToolkit)
+include_directories(${CUDAToolkit_INCLUDE_DIRS})
 
 add_subdirectory(CellularAutomata)
 
