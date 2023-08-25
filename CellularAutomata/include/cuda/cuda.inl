@@ -9,9 +9,66 @@
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
-#define cudaCheck(a) {if (a != cudaSuccess) {throw CellularAutomata::exception::CudaRuntimeError(cudaGetErrorString(cudaGetLastError()));}}
+#define cudaCheck(a) do {if ((a) != cudaSuccess) throw CellularAutomata::exception::CudaRuntime(); } while(false)
 
 #define TILE_SIZE 32
+
+/**
+ * @brief Positive modulo - a % n
+ * @param a dividend
+ * @param n divisor
+ * @return unsigned int
+ *
+ * More infomation on [modulo](https://en.wikipedia.org/wiki/Modulo)
+ */
+__device__ __forceinline__ const unsigned int modP(const int a, const int n)
+{
+    int r = a % n;
+    if (r < 0)
+        r += n;
+    return r;
+}
+
+template<typename T>
+__device__ void loadShared_recursive(const T* __restrict__ input, T* shared, const uint2 inputShape, const uint2 sharedShape, const unsigned int kernelSize, const uint4 valid)
+{
+    const int halo = kernelSize / 2;                        // extra space needed because convolution goes beyond borders
+    const int tid = threadIdx.y * blockDim.x + threadIdx.x; // local thread ID
+    const int memSize = sharedShape.y * sharedShape.x;      // shared memory size
+    const int threadsPerBlock = blockDim.y * blockDim.x;    // total number of threads per block (should be TILE_SIZE * TILE_SIZE)
+
+    // Because of halo / padding, each thread has to load multiple elements
+    for (int i = tid; i < memSize; i += threadsPerBlock)
+    {
+        // convert i back to local x,y coordinates
+        int y = i / sharedShape.x;
+        int x = i % sharedShape.x;
+
+        // check if x,y are inside the valid area
+        if (y < (valid.w + kernelSize - 1) && x < (valid.z + kernelSize - 1))
+        {
+            // 1. convert x,y to global x,y
+            // 2. loop x,y if outside of input array range
+            y = modP(y + valid.y - halo, inputShape.y);
+            x = modP(x + valid.x - halo, inputShape.x);
+
+            // copy
+            shared[i] = input[y * inputShape.x + x];
+        }
+    }
+}
+
+template<typename T>
+__device__ void loadShared_simple(const T* __restrict__ input, T* shared, const int inputWidth, const int sharedWidth, const unsigned int kernelSize, const uint4 valid)
+{
+    const int halo = kernelSize / 2;    // extra space needed because convolution goes beyond borders
+
+    if (threadIdx.y < valid.w && threadIdx.x < valid.z)
+    {
+        // each thread loads their element into shared offset by halo
+        shared[(threadIdx.y + halo) * sharedWidth + (threadIdx.x + halo)] = input[threadIdx.y * inputWidth + threadIdx.x];
+    }
+}
 
 template<typename T, typename Activation>
 __global__ void convKernel(
@@ -19,75 +76,38 @@ __global__ void convKernel(
     const T* __restrict__ kernel,
     T* output,
     Activation fn,
-    const int iHeight,
-    const int iWidth,
-    const int kSize,
+    const uint2 inputShape,
+    const unsigned int kernelSize,
     const bool recursive)
 {
     extern __shared__ T shared[];
 
 #pragma region Variables
 
-    // extra space needed because convolution goes beyond borders
-    const int halo = kSize / 2;
+    // Global position (aka output element which the thread handles): x = col, y = row
+    const uint2 pos{ blockIdx.x * blockDim.x + threadIdx.x, blockIdx.y * blockDim.y + threadIdx.y };
 
-    const int tid = threadIdx.y * blockDim.x + threadIdx.x;
-
-    // Global position (aka output element which the thread handles)
-    const int row = blockIdx.y * blockDim.y + threadIdx.y;
-    const int col = blockIdx.x * blockDim.x + threadIdx.x;
-
-    const int threadsPerBlock = blockDim.y * blockDim.x;
-
-    const int sharedHeight = blockDim.y + kSize - 1;
-    const int sharedWidth = blockDim.x + kSize - 1;
-    const int memSize = sharedHeight * sharedWidth;
-
+    // shared memory shape
+    const uint2 sharedShape{ blockDim.x + kernelSize - 1, blockDim.y + kernelSize - 1 };
 
     // rect in which the convolution should be done
-    const uint4 rect
+    const uint4 valid
     {
-        blockIdx.x * blockDim.x,                             // x
-        blockIdx.y * blockDim.y,                             // y
-        min(iWidth - (blockIdx.x * blockDim.x), blockDim.x), // z
-        min(iHeight - (blockIdx.y * blockDim.y), blockDim.y) // w
+        blockIdx.x * blockDim.x,                                    // x
+        blockIdx.y * blockDim.y,                                    // y
+        min(inputShape.x - (blockIdx.x * blockDim.x), blockDim.x),  // z
+        min(inputShape.y - (blockIdx.y * blockDim.y), blockDim.y)   // w
     };
 
 #pragma endregion Variables
 
-    // TODO: (non) recursive loading 
 
 #pragma region Loading
 
-    // Because of halo / padding, each thread has to load multiple elements
-    for (int i = tid; i < memSize; i += threadsPerBlock)
-    {
-        int y = i / sharedWidth;
-        int x = i % sharedWidth;
-
-        if (y < (rect.w + kSize - 1) && x < (rect.z + kSize - 1))
-        {
-            if (blockIdx.y == 0 && y < halo)
-            {
-                y += iHeight;
-            }
-            else if (blockIdx.y == gridDim.y - 1 && y >= TILE_SIZE + halo)
-            {
-                y -= iHeight;
-            }
-
-            if (blockIdx.x == 0 && x < halo)
-            {
-                x += iWidth;
-            }
-            else if (blockIdx.x == gridDim.x - 1 && x >= TILE_SIZE + halo)
-            {
-                x -= iWidth;
-            }
-
-            shared[i] = input[(rect.y + y - halo) * iWidth + (rect.x + x - halo)];
-        }
-    }
+    if (recursive)
+        loadShared_recursive(input, shared, inputShape, sharedShape, kernelSize, valid);
+    else
+        loadShared_simple(input, shared, inputShape.x, sharedShape.x, kernelSize, valid);
 
 #pragma endregion Loading
 
@@ -96,22 +116,22 @@ __global__ void convKernel(
 #pragma region Matrix mul
 
     // Ignore empty / padded elements (input size is not perfect -> some tiles are not full)
-    if (threadIdx.x < rect.z && threadIdx.y < rect.w)
+    if (threadIdx.x < valid.z && threadIdx.y < valid.w)
     {
         T temp = 0;
 
         // Iterate over kernel
-        for (int y = 0; y < kSize; y++)
+        for (int y = 0; y < kernelSize; y++)
         {
-            for (int x = 0; x < kSize; x++)
+            for (int x = 0; x < kernelSize; x++)
             {
-                int _shared = (threadIdx.y + y) * sharedWidth + (threadIdx.x + x);
+                int _shared = (threadIdx.y + y) * sharedShape.x + (threadIdx.x + x);
 
-                temp += shared[_shared] * kernel[y * kSize + x];
+                temp += shared[_shared] * kernel[y * kernelSize + x];
             }
         }
 
-        output[row * iWidth + col] = fn(temp);
+        output[pos.y * inputShape.x + pos.x] = fn(temp);
     }
 
 #pragma endregion
@@ -150,7 +170,7 @@ namespace CellularAutomata
         template <typename T, typename Activation>
         void epoch(
             T* input, T* kernel, T* output, Activation fn,
-            const int h, const int w, const int s, const int r)
+            const unsigned int h, const unsigned int w, const unsigned int s, const bool r)
         {
             dim3 grid(((w - 1) / TILE_SIZE) + 1, ((h - 1) / TILE_SIZE) + 1);
             dim3 block(TILE_SIZE, TILE_SIZE);
@@ -162,9 +182,19 @@ namespace CellularAutomata
 
             convKernel<<<grid, block, memSize>>> (
                 input, kernel, output, fn,
-                h, w, s, r);
+                uint2{ h, w }, s, r);
 
-            cudaCheck(cudaDeviceSynchronize());
+            cudaError_t e = cudaDeviceSynchronize();
+
+            if (e != cudaSuccess)
+                printf("%s: %s\n", cudaGetErrorName(e), cudaGetErrorString(e));
+
+            // throw CellularAutomata::exception::CudaRuntime(cudaGetErrorString(e));
+
+            // cudaCheck(cudaDeviceSynchronize());
         }
     }
 }
+
+#undef TILE_SIZE
+#undef cudaCheck
