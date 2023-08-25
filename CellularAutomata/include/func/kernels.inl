@@ -7,7 +7,7 @@ namespace CellularAutomata
     namespace Kernels
     {
         template <typename T>
-        void ones(T* array, const int s)
+        void ones(T* array, const unsigned int s)
         {
             for (int i = 0; i < s * s; i++)
             {
@@ -16,7 +16,7 @@ namespace CellularAutomata
         }
 
         template <typename T>
-        void life(T* array, const int s)
+        void life(T* array, const unsigned int s)
         {
             int center = (s * s) / 2;
             for (int i = 0; i < s * s; i++)

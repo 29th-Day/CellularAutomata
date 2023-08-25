@@ -13,7 +13,7 @@ namespace CellularAutomata
          *
          * @param arrayPtr pointer to deviceArray
          * @param bytes allocation size in bytes
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         void allocateCUDA(void** arrayPtr, size_t bytes);
 
@@ -23,7 +23,7 @@ namespace CellularAutomata
          *
          * @param arrayPtr pointer to hostArray
          * @param bytes allocation size in bytes
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         void allocateHost(void** arrayPtr, size_t bytes);
 
@@ -31,7 +31,7 @@ namespace CellularAutomata
          * @brief  Frees memory on a CUDA device
          *
          * @param array deviceArray to free
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         void freeCUDA(void* array);
 
@@ -41,7 +41,7 @@ namespace CellularAutomata
          * @note Frees "page-locked memory" allocated with CUDA functions
          *
          * @param array hostArray to free
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         void freeHost(void* array);
 
@@ -55,7 +55,7 @@ namespace CellularAutomata
          * @param dst output array to copy to
          * @param to computational device where output lives
          * @param bytes allocation size in bytes
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         void copyCUDA(void* src, Device from, void* dst, Device to, size_t bytes);
 
@@ -72,12 +72,12 @@ namespace CellularAutomata
          * @param w width of state array
          * @param s size of kernel
          * @param r grid recursion enabled
-         * @throw CudaRuntimeError
+         * @throw CudaRuntime
          */
         template <typename T, typename Activation>
         void epoch(
             T* input, T* kernel, T* output, Activation fn,
-            const int h, const int w, const int s, const int r);
+            const unsigned int h, const unsigned int w, const unsigned int s, const bool r);
     }
 }
 

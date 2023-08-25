@@ -15,7 +15,7 @@ template <typename T>
  * @param height height of array
  * @param width width of array
  */
-using stateFunc = void (*)(T*, const int, const int);
+using stateFunc = void (*)(T*, const unsigned int, const unsigned int);
 
 template <typename T>
 /**
@@ -24,7 +24,7 @@ template <typename T>
  * @param array kernel array
  * @param size size of kernel (always square)
  */
-using kernelFunc = void (*)(T*, const int);
+using kernelFunc = void (*)(T*, const unsigned int);
 
 /**
  * @brief Main namespace
@@ -68,12 +68,12 @@ namespace CellularAutomata
         /**
          * @brief Height of 2D Matrix
          */
-        const int height;
+        const unsigned int height;
 
         /**
          * @brief Width of 2D Matrix
          */
-        const int width;
+        const unsigned int width;
 
         /**
          * @brief Computational device
@@ -89,7 +89,7 @@ namespace CellularAutomata
          * @param device computational device
          * @throw DeviceNotAvailable
          */
-        State(int height, int width, stateFunc<T> fn, Device device);
+        State(const unsigned int height, const unsigned int width, stateFunc<T> fn, Device device);
 
         /**
          * @brief Frees dynamically allocated memory
@@ -99,7 +99,7 @@ namespace CellularAutomata
         /**
          * @brief Copy the own current state buffer to another current state buffer across devices
          * @param to other state
-         * @throw ShapeMismatch
+         * @throw ShapesUnequal
          */
         void copyTo(State<T>* to);
 
@@ -136,7 +136,7 @@ namespace CellularAutomata
         /**
          * @brief Side length of matrix
          */
-        const int size;
+        const unsigned int size;
         /**
          * @brief Computational device
          */
@@ -150,7 +150,7 @@ namespace CellularAutomata
          * @param device computational device
          * @throw DeviceNotAvailable
          */
-        Kernel(int size, kernelFunc<T> fn, Device device);
+        Kernel(const unsigned int size, kernelFunc<T> fn, Device device);
 
         /**
          * @brief Frees dynamically allocated memory
@@ -160,7 +160,7 @@ namespace CellularAutomata
         /**
          * @brief Copy the own kernel array to another kernel array across devices
          * @param to other kernel
-         * @throw ShapeMismatch
+         * @throw ShapesUnequal
          */
         void copyTo(Kernel<T>* to);
 

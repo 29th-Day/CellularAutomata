@@ -12,6 +12,7 @@ namespace CellularAutomata
      * @param kernel kernel of type T
      * @param activation functor of type T
      * @param recursive if world should be looping (flat grid behaves like torus surface)
+     * @throw DevicesUnequal
      */
     template <typename T, typename Activation>
     void Epoch(State<T>* state, Kernel<T>* kernel, Activation activation, bool recursive);

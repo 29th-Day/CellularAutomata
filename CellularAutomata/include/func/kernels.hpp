@@ -17,7 +17,7 @@ namespace CellularAutomata
          * @param s kernel size
          */
         template <typename T>
-        void ones(T* array, const int s);
+        void ones(T* array, const unsigned int s);
 
 
         /**
@@ -28,7 +28,7 @@ namespace CellularAutomata
          * @param s kernel size
          */
         template <typename T>
-        void life(T* array, const int s);
+        void life(T* array, const unsigned int s);
 
         // template <typename T>
         // void normal(T* array, const int s);

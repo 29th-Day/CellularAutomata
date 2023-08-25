@@ -12,7 +12,7 @@
 #define kernelSize size * size * sizeof(T)
 
 template <typename T>
-inline void print2D(T* array, const int h, const int w)
+inline void print2D(T* array, const unsigned int h, const unsigned int w)
 {
     for (int y = 0; y < h; y++)
     {
@@ -27,7 +27,7 @@ inline void print2D(T* array, const int h, const int w)
 namespace CellularAutomata
 {
     template <typename T>
-    State<T>::State(int height, int width, stateFunc<T> fn, Device device) : height(height), width(width), device(device)
+    State<T>::State(const unsigned int height, const unsigned int width, stateFunc<T> fn, Device device) : height(height), width(width), device(device)
     {
     #ifdef __CUDACC__
         initCUDA(fn);
@@ -120,7 +120,7 @@ namespace CellularAutomata
     void State<T>::copyTo(State<T>* to)
     {
         if (height != to->height && width != to->width)
-            throw exception::ShapeMismatch();
+            throw exception::ShapesUnequal();
 
         if (device == Device::CUDA || to->device == Device::CUDA)
         {
@@ -165,7 +165,7 @@ namespace CellularAutomata
 
 
     template <typename T>
-    Kernel<T>::Kernel(int size, kernelFunc<T> fn, Device device) : size(size), device(device)
+    Kernel<T>::Kernel(const unsigned int size, kernelFunc<T> fn, Device device) : size(size), device(device)
     {
         if (device == Device::CUDA)
         {
@@ -239,7 +239,7 @@ namespace CellularAutomata
     void Kernel<T>::copyTo(Kernel<T>* to)
     {
         if (size != to->size)
-            throw exception::ShapeMismatch();
+            throw exception::ShapesUnequal();
 
         if (device == Device::CUDA)
         {
@@ -273,3 +273,6 @@ namespace CellularAutomata
         }
     }
 }
+
+#undef stateSize
+#undef kernelSize
