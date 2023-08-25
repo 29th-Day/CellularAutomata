@@ -7,7 +7,7 @@ namespace CellularAutomata
     namespace States
     {
         template <typename T>
-        void normal(T* array, const int h, const int w)
+        void normal(T* array, const unsigned int h, const unsigned int w)
         {
             for (int i = 0; i < h * w; i++)
             {
@@ -16,7 +16,7 @@ namespace CellularAutomata
         }
 
         template <typename T>
-        void binary(T* array, const int h, const int w)
+        void binary(T* array, const unsigned int h, const unsigned int w)
         {
             for (int i = 0; i < h * w; i++)
             {
@@ -36,7 +36,7 @@ namespace CellularAutomata
             template <typename T>
             inline void copyInto(T* src, const unsigned int src_h, const unsigned int src_w, T* dst, const unsigned int dst_h, const unsigned int dst_w, const unsigned int y, const unsigned int x)
             {
-                if (src_h + y >= src_h || src_w + x >= src_w)
+                if (src_h + y > dst_h || src_w + x > dst_w)
                     throw exception::OutOfBounds();
 
                 int i = 0;

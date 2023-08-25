@@ -29,10 +29,14 @@ namespace CellularAutomata
         DEFINE_EXCEPTION_CLASS(DeviceNotAvailable);
 
         /**
+         * @brief Objects are on different devices
+         */
+        DEFINE_EXCEPTION_CLASS(DevicesUnequal);
+
+        /**
          * @brief Shape of two matrices are not equal
          */
-        DEFINE_EXCEPTION_CLASS(ShapeMismatch);
-
+        DEFINE_EXCEPTION_CLASS(ShapesUnequal);
 
         /**
          * @brief Accessed a value outside the bounds of matrix
@@ -41,9 +45,11 @@ namespace CellularAutomata
 
         /**
          * @brief A CUDA runtime error occurred
-         * 
+         *
          * For additional infomation look at the [NVIDA CUDA documentation](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html)
          */
-        DEFINE_EXCEPTION_CLASS(CudaRuntimeError);
+        DEFINE_EXCEPTION_CLASS(CudaRuntime);
     }
 }
+
+#undef DEFINE_EXCEPTION_CLASS

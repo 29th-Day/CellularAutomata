@@ -18,7 +18,7 @@ namespace CellularAutomata
          * @param w state width
          */
         template <typename T>
-        void normal(T* array, const int h, const int w);
+        void normal(T* array, const unsigned int h, const unsigned int w);
 
         /**
          * @brief Fills the kernel with either 0 or 1
@@ -29,7 +29,7 @@ namespace CellularAutomata
          * @param w state width
          */
         template <typename T>
-        void binary(T* array, const int h, const int w);
+        void binary(T* array, const unsigned int h, const unsigned int w);
 
         /**
          * @brief Some predefined objects of Conway's Game of Life.

@@ -6,7 +6,7 @@ namespace CellularAutomata
     {
         template <typename T, typename Activation>
         void epoch(const T* input, const T* kernel, T* output, Activation fn,
-            const int h, const int w, const int s, const bool r)
+            const unsigned int h, const unsigned int w, const unsigned int s, const bool r)
         {
             int kernel_radius = s / 2;
 
