@@ -9,7 +9,7 @@
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
-#define cudaCheck(a) do {if ((a) != cudaSuccess) throw CellularAutomata::exception::CudaRuntime(); } while(false)
+#define cudaCheck(fn) do {cudaError_t e = fn; if (e != cudaSuccess) throw CellularAutomata::exception::CudaRuntime(cudaGetErrorString(e)); } while(false)
 
 #define TILE_SIZE 32
 
@@ -21,7 +21,7 @@
  *
  * More infomation on [modulo](https://en.wikipedia.org/wiki/Modulo)
  */
-__device__ __forceinline__ const unsigned int modP(const int a, const int n)
+__device__ __forceinline__ unsigned int modP(const int a, const int n)
 {
     int r = a % n;
     if (r < 0)
@@ -184,14 +184,14 @@ namespace CellularAutomata
                 input, kernel, output, fn,
                 uint2{ h, w }, s, r);
 
-            cudaError_t e = cudaDeviceSynchronize();
+            // cudaError_t e = cudaDeviceSynchronize();
 
-            if (e != cudaSuccess)
-                printf("%s: %s\n", cudaGetErrorName(e), cudaGetErrorString(e));
+            // if (e != cudaSuccess)
+            //     printf("%s: %s\n", cudaGetErrorName(e), cudaGetErrorString(e));
 
             // throw CellularAutomata::exception::CudaRuntime(cudaGetErrorString(e));
 
-            // cudaCheck(cudaDeviceSynchronize());
+            cudaCheck(cudaDeviceSynchronize());
         }
     }
 }
