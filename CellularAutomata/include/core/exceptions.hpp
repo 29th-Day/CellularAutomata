@@ -4,18 +4,18 @@
 #include <string>
 
 
-#define DEFINE_EXCEPTION_CLASS(name)                                                            \
-class name : public std::exception {                                                            \
-    std::string msg;                                                                            \
-    public:                                                                                     \
-        /** @brief Default message containing name */                                           \
-        explicit name() : msg(#name) { }                                                        \
-        /** @brief Message containing name and appended custom message */                       \
-        explicit name(std::string message) : msg(#name) { msg = msg + " - " + message; }        \
-        /** @brief Override for virtual std::exception */                                       \
-        explicit name(const char* message) : msg(#name) { msg = msg + " - " + std::string(message); } \
-        /** @brief Message containing name and appended custom message */                       \
-        const char* what() const noexcept override { return msg.c_str(); }                      \
+#define DEFINE_EXCEPTION_CLASS(name)                                                                    \
+class name : public std::exception {                                                                    \
+    std::string msg;                                                                                    \
+    public:                                                                                             \
+        /** @brief Default message containing name */                                                   \
+        explicit name() : msg(#name) { }                                                                \
+        /** @brief Message containing name and appended custom message */                               \
+        explicit name(std::string message) : msg(#name) { msg = msg + " - " + message; }                \
+        /** @brief Message containing name and appended custom message */                               \
+        explicit name(const char* message) : msg(#name) { msg = msg + " - " + std::string(message); }   \
+        /** @brief Override for virtual std::exception */                                               \
+        const char* what() const noexcept override { return msg.c_str(); }                              \
     }
 
 namespace CellularAutomata
