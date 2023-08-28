@@ -17,11 +17,10 @@ namespace CellularAutomata
                 // definitons inside first loop for parallelization
                 int array_y = 0;
                 int array_x = 0;
-                float sum = 0.0f;
+                T sum = static_cast<T>(0);
 
                 for (int col = 0; col < w; col++)
                 {
-
                     // iterate over kernel
                     for (int y = 0; y < s; y++)
                     {
@@ -58,7 +57,7 @@ namespace CellularAutomata
 
                     // Set new value
                     output[row * w + col] = fn(sum);
-                    sum = 0.0f;
+                    sum = static_cast<T>(0);
                 }
             }
         }
