@@ -6,8 +6,6 @@
 #include "../cuda/cuda.cuh"
 #endif
 
-float test(float x) { return x; }
-
 namespace CellularAutomata
 {
     template <typename T, typename Activation>
