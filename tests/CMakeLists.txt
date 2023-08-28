@@ -1,28 +1,29 @@
 MESSAGE("BUILD TESTS")
 
-set(TARGET UnitTest)
 
-# packages
 find_package(doctest CONFIG REQUIRED)
-
-# includes
 include(doctest)
-
-# build executable
-add_executable(${TARGET} unittest.cpp)
-
-target_link_libraries(${TARGET} PRIVATE
-    # CellularAutomata
-    CellularAutomata
-    # doctest
-    doctest::doctest
-)
-
-# run tests
 enable_testing()
-doctest_discover_tests(${TARGET})
 
-# # Add the /NODEFAULTLIB:LIBCMT linker option
-# if(${USE_CUDA} AND ${MSVC})
-#   target_link_options(${TARGET} PRIVATE /NODEFAULTLIB:LIBCMT)
-# endif()
+function(create_test target files)
+    add_executable(${target} ${files})
+
+    target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+    target_link_libraries(${target} PRIVATE
+        CellularAutomata
+        doctest::doctest
+    )
+
+    doctest_discover_tests(${target})
+endfunction()
+
+
+create_test(test_core tests.cpp)
+
+find_package(CUDAToolkit)
+if(CUDAToolkit_FOUND)
+    enable_language(CUDA)
+
+    create_test(test_cuda tests.cu)
+endif()
