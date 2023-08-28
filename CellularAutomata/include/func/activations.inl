@@ -15,7 +15,7 @@ namespace CellularAutomata
         template<typename T>
         cudaFn T normal<T>::operator()(const T x) const
         {
-            return static_cast<T>(std::min(0, std::max(x, 1)));
+            return static_cast<T>(std::max(std::min(x, 1), 0));
         }
 
         template<typename T>
