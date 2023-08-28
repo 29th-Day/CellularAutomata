@@ -11,16 +11,19 @@
 #define stateSize height * width * sizeof(T)
 #define kernelSize size * size * sizeof(T)
 
-template <typename T>
-inline void print2D(T* array, const unsigned int h, const unsigned int w)
+namespace
 {
-    for (int y = 0; y < h; y++)
+    template <typename T>
+    inline void _print2D(T* array, const unsigned int h, const unsigned int w)
     {
-        for (int x = 0; x < w; x++)
+        for (int y = 0; y < h; y++)
         {
-            std::cout << array[y * w + x] << " ";
+            for (int x = 0; x < w; x++)
+            {
+                std::cout << array[y * w + x] << " ";
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 }
 
@@ -33,7 +36,7 @@ namespace CellularAutomata
         initCUDA(fn);
     #else
         if (device == Device::CUDA)
-            throw exception::DeviceNotAvailable("CUDA");
+            throw exceptions::DeviceNotAvailable("CUDA");
 
         initCPU(fn);
     #endif
@@ -120,19 +123,17 @@ namespace CellularAutomata
     void State<T>::copyTo(State<T>* to)
     {
         if (height != to->height && width != to->width)
-            throw exception::ShapesUnequal();
+            throw exceptions::ShapesUnequal();
 
+    #ifdef __CUDACC__
         if (device == Device::CUDA || to->device == Device::CUDA)
         {
-        #ifdef __CUDACC__
             size_t bytes = stateSize;
             CellularAutomata::cuda::copyCUDA(curr, device, to->curr, to->device, bytes);
-        #endif
         }
-        else
-        {
-            std::copy(curr, curr + height * width, to->curr);
-        }
+    #endif
+
+        std::copy(curr, curr + height * width, to->curr);
     }
 
     template <typename T>
@@ -146,6 +147,7 @@ namespace CellularAutomata
     template <typename T>
     void State<T>::print()
     {
+    #ifdef __CUDACC__
         if (device == Device::CUDA)
         {
             // TODO: pinned memory is slower to allocate but faster to transfer
@@ -153,14 +155,15 @@ namespace CellularAutomata
             T* temp = new T[height * width]();
             CellularAutomata::cuda::copyCUDA(curr, device, temp, Device::CPU, bytes);
 
-            print2D(temp, height, width);
+            _print2D(temp, height, width);
 
             delete[] temp;
+
+            return;
         }
-        else
-        {
-            print2D(curr, height, width);
-        }
+    #endif
+
+        _print2D(curr, height, width);
     }
 
 
@@ -172,7 +175,7 @@ namespace CellularAutomata
         #ifdef __CUDACC__
             initCUDA(fn);
         #else
-            throw exception::DeviceNotAvailable("CUDA");
+            throw exceptions::DeviceNotAvailable("CUDA");
         #endif
         }
         else
@@ -211,16 +214,15 @@ namespace CellularAutomata
     template <typename T>
     Kernel<T>::~Kernel()
     {
+    #ifdef __CUDACC__
         if (device == Device::CUDA)
         {
-        #ifdef __CUDACC__
             freeCUDA();
-        #endif
+            return;
         }
-        else
-        {
-            freeCPU();
-        }
+    #endif
+
+        freeCPU();
     }
 
     template <typename T>
@@ -239,38 +241,39 @@ namespace CellularAutomata
     void Kernel<T>::copyTo(Kernel<T>* to)
     {
         if (size != to->size)
-            throw exception::ShapesUnequal();
+            throw exceptions::ShapesUnequal();
 
+    #ifdef __CUDACC__
         if (device == Device::CUDA)
         {
-        #ifdef __CUDACC__
             size_t bytes = kernelSize;
             CellularAutomata::cuda::copyCUDA(kernel, device, to->kernel, to->device, bytes);
-        #endif
+            return;
         }
-        else
-        {
-            std::copy(kernel, kernel + size * size, to->kernel);
-        }
+    #endif
+
+        std::copy(kernel, kernel + size * size, to->kernel);
     }
 
     template <typename T>
     void Kernel<T>::print()
     {
+    #ifdef __CUDACC__
         if (device == Device::CUDA)
         {
             size_t bytes = kernelSize;
             T* temp = new T[size * size]();
             CellularAutomata::cuda::copyCUDA(kernel, device, temp, Device::CPU, bytes);
 
-            print2D(temp, size, size);
+            _print2D(temp, size, size);
 
             delete[] temp;
+
+            return;
         }
-        else
-        {
-            print2D(kernel, size, size);
-        }
+    #endif
+
+        _print2D(kernel, size, size);
     }
 }
 
