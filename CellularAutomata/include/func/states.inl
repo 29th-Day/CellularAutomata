@@ -37,7 +37,7 @@ namespace CellularAutomata
             inline void copyInto(T* src, const unsigned int src_h, const unsigned int src_w, T* dst, const unsigned int dst_h, const unsigned int dst_w, const unsigned int y, const unsigned int x)
             {
                 if (src_h + y > dst_h || src_w + x > dst_w)
-                    throw exception::OutOfBounds();
+                    throw exceptions::OutOfBounds();
 
                 int i = 0;
                 for (int _y = y; _y < y + src_h; _y++)

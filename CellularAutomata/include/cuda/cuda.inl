@@ -9,7 +9,7 @@
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
-#define cudaCheck(fn) do {cudaError_t e = fn; if (e != cudaSuccess) throw CellularAutomata::exception::CudaRuntime(cudaGetErrorString(e)); } while(false)
+#define cudaCheck(fn) do {cudaError_t e = fn; if (e != cudaSuccess) throw CellularAutomata::exceptions::CudaRuntime(cudaGetErrorString(e)); } while(false)
 
 #define TILE_SIZE 32
 

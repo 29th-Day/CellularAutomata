@@ -14,7 +14,7 @@ namespace CellularAutomata
     void Epoch(State<T>* state, Kernel<T>* kernel, Activation activation, bool recursive)
     {
         if (state->device != kernel->device)
-            throw exception::DevicesUnequal("Devices of state and kernel are unequal");
+            throw exceptions::DevicesUnequal("Devices of state and kernel are unequal");
 
         if (state->device == Device::CUDA)
         {

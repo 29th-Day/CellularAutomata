@@ -23,7 +23,7 @@ namespace CellularAutomata
     /**
      * @brief Contains all custom exceptions
     */
-    namespace exception
+    namespace exceptions
     {
         /**
          * @brief Requested device not available
