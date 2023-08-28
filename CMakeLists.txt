@@ -6,7 +6,7 @@ project(CellularAutomata
 )
 
 option(BUILD_EXAMPLE "Build examples?" ON)
-option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
+option(BUILD_TESTS "Build tests? (CTest & doctest)" ON)
 option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" OFF)
 
 
