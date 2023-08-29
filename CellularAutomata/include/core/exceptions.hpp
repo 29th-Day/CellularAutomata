@@ -48,9 +48,14 @@ namespace CellularAutomata
         /**
          * @brief A CUDA runtime error occurred
          *
-         * For additional infomation look at the [NVIDA CUDA documentation](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html)
+         * For additional infomation look at the [NVIDIA CUDA documentation](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html)
          */
         DEFINE_EXCEPTION_CLASS(CudaRuntime);
+
+        /**
+         * @brief Template type is not supported for this operation
+         */
+        DEFINE_EXCEPTION_CLASS(TypeNotSupported);
     }
 }
 
