@@ -42,7 +42,7 @@ TEST_SUITE("STATES")
     const int w = 10;
     const stateFunc<int> f = nullptr;
 
-    TEST_CASE("states/constructor (CPU)")
+    TEST_CASE("CORE - states/constructor")
     {
         State<int> state(h, w, f, Device::CPU);
         CHECK(state.height == h);
@@ -62,7 +62,7 @@ TEST_SUITE("KERNELS")
     const int s = 3;
     const kernelFunc<int> f = nullptr;
 
-    TEST_CASE("kernels/constructor (CPU)")
+    TEST_CASE("CORE - kernels/constructor")
     {
         Kernel<int> kernel(s, f, Device::CPU);
         CHECK(kernel.size == s);
@@ -82,11 +82,11 @@ TEST_SUITE("CONVOLUTION")
     const int s = 3;
     const int length = h * w;
 
-    TEST_CASE("conv/center (CPU)")
+    TEST_CASE_TEMPLATE("CORE - conv/center", T, types)
     {
-        State<int> state(h, w, (stateFunc<int>)nullptr, Device::CPU);
-        Kernel<int> kernel(s, Kernels::ones, Device::CPU);
-        Activations::normal<int> fn;
+        State<T> state(h, w, (stateFunc<T>)nullptr, Device::CPU);
+        Kernel<T> kernel(s, Kernels::ones, Device::CPU);
+        Activations::normal<T> fn;
 
         // 0 0 0 0 0
         // 0 0 0 0 0
@@ -95,7 +95,7 @@ TEST_SUITE("CONVOLUTION")
         // 0 0 0 0 0
         state.curr[12] = 1;
 
-        std::array<int, length> result = {
+        std::array<T, length> result = {
             0, 0, 0, 0, 0,
             0, 1, 1, 1, 0,
             0, 1, 1, 1, 0,
@@ -117,11 +117,11 @@ TEST_SUITE("CONVOLUTION")
         }
     }
 
-    TEST_CASE("conv/corner (CPU)")
+    TEST_CASE_TEMPLATE("CORE - conv/corner", T, types)
     {
-        State<int> state(h, w, (stateFunc<int>)nullptr, Device::CPU);
-        Kernel<int> kernel(s, Kernels::ones, Device::CPU);
-        Activations::normal<int> fn;
+        State<T> state(h, w, (stateFunc<T>)nullptr, Device::CPU);
+        Kernel<T> kernel(s, Kernels::ones, Device::CPU);
+        Activations::normal<T> fn;
 
         // 1 0 0 0 0
         // 0 0 0 0 0
@@ -130,9 +130,11 @@ TEST_SUITE("CONVOLUTION")
         // 0 0 0 0 0
         state.curr[0] = 1;
 
+        std::array<T, length> result;
+
         SUBCASE("non-recursive")
         {
-            std::array<int, length> result = {
+            result = {
                 1, 1, 0, 0, 0,
                 1, 1, 0, 0, 0,
                 0, 0, 0, 0, 0,
@@ -146,7 +148,7 @@ TEST_SUITE("CONVOLUTION")
 
         SUBCASE("recursive")
         {
-            std::array<int, length> result = {
+            result = {
                 1, 1, 0, 0, 1,
                 1, 1, 0, 0, 1,
                 0, 0, 0, 0, 0,
@@ -158,60 +160,4 @@ TEST_SUITE("CONVOLUTION")
             CHECK_ARRAY(state.curr, result, length);
         }
     }
-
-    /*
-    TEST_CASE("ENGINE - convolution (corner w/ recursion) [CPU]")
-    {
-        // auto activation = [](float x)
-        // {
-        //     return x;
-        // };
-
-        // 1 0 0
-        // 0 0 0
-        // 0 0 0
-        state.curr[0] = 1.0f;
-
-        const int length = 9;
-        std::array<float, length> result = {
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f };
-
-        CellularAutomata::Epoch(&state, &kernel, Activations::normal, false);
-
-        for (int i = 0; i < length; i++)
-        {
-            INFO("element: ", i);
-            CHECK(state.curr[i] == doctest::Approx(result[i]));
-        }
-    }
-
-    TEST_CASE("ENGINE - convolution (corner w recursion) [CPU]")
-    {
-        // auto activation = [](float x)
-        // {
-        //     return x;
-        // };
-
-        // 1 0 0
-        // 0 0 0
-        // 0 0 0
-        state.curr[0] = 1.0f;
-
-        const int length = 9;
-        std::array<float, length> result = {
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f };
-
-        CellularAutomata::Epoch(&state, &kernel, Activations::normal, true);
-
-        for (int i = 0; i < length; i++)
-        {
-            INFO("element: ", i);
-            CHECK(state.curr[i] == doctest::Approx(result[i]));
-        }
-    }
-    */
 }

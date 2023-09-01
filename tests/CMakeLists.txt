@@ -26,4 +26,8 @@ if(CUDAToolkit_FOUND)
     enable_language(CUDA)
 
     create_test(test_cuda tests.cu)
+
+    if(MSVC)
+        target_link_options(test_cuda PRIVATE /NODEFAULTLIB:LIBCMT)
+    endif()
 endif()

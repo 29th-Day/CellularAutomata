@@ -9,6 +9,8 @@
 
 using namespace CellularAutomata;
 
+#define _types int, float
+
 TEST_SUITE("CONVOLUTION")
 {
     const int h = 5;
@@ -16,12 +18,12 @@ TEST_SUITE("CONVOLUTION")
     const int s = 3;
     const int length = h * w;
 
-    TEST_CASE("conv/center (CUDA)")
+    TEST_CASE_TEMPLATE("CUDA - conv/center", T, _types)
     {
-        State<int> temp(h, w, (stateFunc<int>)nullptr, Device::CPU);
-        State<int> state(h, w, (stateFunc<int>)nullptr, Device::CUDA);
-        Kernel<int> kernel(s, Kernels::ones, Device::CUDA);
-        Activations::normal<int> fn;
+        State<T> temp(h, w, (stateFunc<T>)nullptr, Device::CPU);
+        State<T> state(h, w, (stateFunc<T>)nullptr, Device::CUDA);
+        Kernel<T> kernel(s, Kernels::ones, Device::CUDA);
+        Activations::normal<T> fn;
 
         // 0 0 0 0 0
         // 0 0 0 0 0
@@ -31,7 +33,7 @@ TEST_SUITE("CONVOLUTION")
         temp.curr[12] = 1;
         temp.copyTo(&state);
 
-        std::array<int, length> result = {
+        std::array<T, length> result = {
             0, 0, 0, 0, 0,
             0, 1, 1, 1, 0,
             0, 1, 1, 1, 0,
@@ -55,12 +57,12 @@ TEST_SUITE("CONVOLUTION")
         }
     }
 
-    TEST_CASE("conv/corner (CUDA)")
+    TEST_CASE_TEMPLATE("CUDA - conv/corner", T, _types)
     {
-        State<int> temp(h, w, (stateFunc<int>)nullptr, Device::CPU);
-        State<int> state(h, w, (stateFunc<int>)nullptr, Device::CUDA);
-        Kernel<int> kernel(s, Kernels::ones, Device::CUDA);
-        Activations::normal<int> fn;
+        State<T> temp(h, w, (stateFunc<T>)nullptr, Device::CPU);
+        State<T> state(h, w, (stateFunc<T>)nullptr, Device::CUDA);
+        Kernel<T> kernel(s, Kernels::ones, Device::CUDA);
+        Activations::normal<T> fn;
 
         // 1 0 0 0 0
         // 0 0 0 0 0
@@ -70,9 +72,11 @@ TEST_SUITE("CONVOLUTION")
         temp.curr[0] = 1;
         temp.copyTo(&state);
 
+        std::array<T, length> result;
+
         SUBCASE("non-recursive")
         {
-            std::array<int, length> result = {
+            result = {
                 1, 1, 0, 0, 0,
                 1, 1, 0, 0, 0,
                 0, 0, 0, 0, 0,
@@ -87,7 +91,7 @@ TEST_SUITE("CONVOLUTION")
 
         SUBCASE("recursive")
         {
-            std::array<int, length> result = {
+            result = {
                 1, 1, 0, 0, 1,
                 1, 1, 0, 0, 1,
                 0, 0, 0, 0, 0,
