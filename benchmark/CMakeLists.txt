@@ -6,12 +6,15 @@ find_package(benchmark CONFIG REQUIRED)
 
 add_executable(${TARGET} benchmarks.cpp)
 
-# link CellularAutomata
-target_link_libraries(${TARGET} PRIVATE "CellularAutomata")
+set_target_properties(${TARGET} PROPERTIES
+    CMAKE_BUILD_TYPE Release
+)
 
 # link benchmark
-target_link_libraries(${TARGET} PRIVATE benchmark::benchmark benchmark::benchmark_main)
-# target_compile_options(-DCMAKE_BUILD_TYPE=Release)
+target_link_libraries(${TARGET} PRIVATE
+    CellularAutomata
+    benchmark::benchmark benchmark::benchmark_main
+)
 
 # # Add the /NODEFAULTLIB:LIBCMT linker option
 # if(${USE_CUDA} AND ${MSVC})

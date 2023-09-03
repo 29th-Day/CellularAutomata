@@ -1,13 +1,15 @@
 
-#include "CellularAutomata.h"
+#include <CellularAutomata>
 
 #include <benchmark/benchmark.h>
 
 #include <vector>
 
-static void Epoch(benchmark::State &state)
+using namespace CellularAutomata;
+
+static void Epoch(benchmark::State& state)
 {
-    CellularAutomata::InitRandom(42);
+    random::seed(42);
 
     unsigned int height = (unsigned int)state.range(0);
     unsigned int width = (unsigned int)state.range(0);
@@ -15,19 +17,13 @@ static void Epoch(benchmark::State &state)
 
     state.SetComplexityN(state.range(0));
 
-    State world;
-    Kernel kernel;
-
-    CellularAutomata::InitState(&world, height, width, States::randf);
-    CellularAutomata::InitKernel(&kernel, 3, Kernels::rand);
+    State<int> world(height, width, States::binary, Device::CPU);
+    Kernel<int> kernel(3, Kernels::life, Device::CPU);
 
     for (auto _ : state)
     {
-        CellularAutomata::Epoch(&world, &kernel, Activations::clip, recursive);
+        CellularAutomata::Epoch(&world, &kernel, Activations::life<int>(), recursive);
     }
-
-    CellularAutomata::DestroyState(&world);
-    CellularAutomata::DestroyKernel(&kernel);
 }
 
 // Register the function as a benchmark

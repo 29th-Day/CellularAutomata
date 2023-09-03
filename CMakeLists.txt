@@ -7,7 +7,7 @@ project(CellularAutomata
 
 option(BUILD_EXAMPLE "Build examples?" ON)
 option(BUILD_TESTS "Build tests? (CTest & doctest)" OFF)
-option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" OFF)
+option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" ON)
 
 
 option(USE_OPENMP "Use OpenMP?" ON)
