@@ -33,7 +33,7 @@ namespace CellularAutomata
     State<T>::State(const unsigned int height, const unsigned int width, stateFunc<T> fn, Device device) : height(height), width(width), device(device)
     {
     #ifdef __CUDACC__
-        if constexpr (sizeof(T) != 4)
+        if (sizeof(T) != 4)
             throw exceptions::TypeNotSupported("Only 32bit types are supported with CUDA");
 
         initCUDA(fn);
