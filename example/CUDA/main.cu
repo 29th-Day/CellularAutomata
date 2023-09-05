@@ -12,7 +12,6 @@
 #include <CellularAutomata>
 #include <iostream>
 
-
 using namespace CellularAutomata;
 
 // Custom activation function

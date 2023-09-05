@@ -13,9 +13,15 @@ option(BUILD_BENCHMARKS "Build benchmarks? (Google benchmark)" ON)
 option(USE_OPENMP "Use OpenMP?" ON)
 option(USE_CUDA "Use CUDA?" ON)
 
+# https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
+set(CUDA_ARCH "86")
+
 # development only, not actually nessecary but IntelliSense wouldn't find CUDA otherwise
 find_package(CUDAToolkit)
 include_directories(${CUDAToolkit_INCLUDE_DIRS})
+if (${USE_CUDA} AND ${CUDAToolkit_FOUND})
+    enable_language(CUDA)
+endif()
 
 add_subdirectory(CellularAutomata)
 

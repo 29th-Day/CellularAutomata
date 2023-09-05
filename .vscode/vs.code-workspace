@@ -40,6 +40,12 @@
 				"type": "shell",
 				"command": "cls; ./build/example/CUDA/Debug/example_cuda.exe",
 				"problemMatcher": []
+			},
+			{
+				"label": "Benchmark",
+				"type": "shell",
+				"command": "cls; cd benchmark; ../build/benchmark/Debug/Benchmark.exe --benchmark_out='benchmark.json'",
+				"problemMatcher": []
 			}
 		]
 	}

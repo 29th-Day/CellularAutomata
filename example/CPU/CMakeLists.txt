@@ -24,3 +24,6 @@ target_link_libraries(${TARGET}
     # OpenMP
     $<IF:$<TARGET_EXISTS:OpenMP::OpenMP_CXX>, OpenMP::OpenMP_CXX, >
 )
+
+get_target_property(OUT ${TARGET} LINK_LIBRARIES)
+message(STATUS ${OUT})

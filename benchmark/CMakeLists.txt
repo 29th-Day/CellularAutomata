@@ -4,10 +4,10 @@ set(TARGET Benchmark)
 
 find_package(benchmark CONFIG REQUIRED)
 
-add_executable(${TARGET} benchmarks.cpp)
+add_executable(${TARGET} benchmarks.cu)
 
 set_target_properties(${TARGET} PROPERTIES
-    CMAKE_BUILD_TYPE Release
+    CUDA_ARCHITECTURES ${CUDA_ARCH}
 )
 
 # link benchmark
