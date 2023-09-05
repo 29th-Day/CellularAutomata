@@ -1,7 +1,10 @@
 import argparse
-import re
+
+import json
+import subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 
 parser = argparse.ArgumentParser(
     prog="Plotter",
@@ -14,59 +17,77 @@ parser.add_argument("-m", "--measures", nargs="+", default=["mean", "median", "s
 
 args = parser.parse_args()
 
-df = pd.read_csv(args.filename)
+with  open(args.filename) as f:
+    data = json.load(f)
+
+data["machine"] = {"cpu": data["context"]}
+
+try:
+    gpu = subprocess.check_output(["nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader,nounits", "-i", "0"]).decode().replace("\r", "").replace("\n", "").split(", ")
+
+    data["machine"]["cuda"] = {
+        "name": gpu[0],
+        "driver": gpu[1],
+        "memory": int(gpu[2])
+    }
+except:
+    print("nividia-smi not found")
+
+
+df = pd.DataFrame(columns=["device", "world_size", "iterations", "measure", "duration", "time_unit"])
+
+for entry in data["benchmarks"]:
+    splits = entry["name"].split("/")
+    df.loc[len(df)] = [
+        splits[0],
+        splits[1],
+        entry["repetitions"],
+        entry["aggregate_name"],
+        entry["real_time"],
+        entry["time_unit"]
+    ]
 
 # print(df)
 
-pattern = r'Epoch/(\d+)/repeats:(\d+)_([a-zA-Z]+)'
+color = {
+    "CPU": "royalblue",
+    "CUDA": "forestgreen"
+}
 
-world_sizes = []
-measures = []
+def plot_measures(df: pd.DataFrame, measures: list[str]):
+    devices = df['device'].unique()
 
-for _, row, in df.iterrows():
-    match = re.search(pattern, row['name'])
+    nrows = len(devices)
+    ncols = len(measures)
 
-    if match:
-        world_sizes.append(match.group(1))
-        measures.append(match.group(3))
-    else:
-        raise ValueError("Regex pattern different than expected")
+    time_unit = df["time_unit"].values
+    if not all(x==time_unit[0] for x in time_unit):
+        raise ValueError("time unit is not always the same!")
+    time_unit = time_unit[0]
 
-df["world_size"] = world_sizes
-df["measure"] = measures
+    _, axs = plt.subplots(nrows, ncols, figsize=(ncols*args.size, nrows*args.size))
 
-df.drop(columns=['name'], inplace=True)
+    for row, device in enumerate(devices):
+        for col, measure in enumerate(measures):
+            m = df.loc[(df['measure'] == measure) & (df['device'] == device)]
 
+            world_sizes = m["world_size"].values
+            duration = m["duration"].values
 
+            ax: plt.Axes = axs[row, col]
 
-def plot_measures(measures: list[str]):
-
-    axs: list[plt.Axes]
-    plots = len(measures)
-    _, axs = plt.subplots(1, plots, figsize=(plots*args.size, args.size))
-
-    for index, measure in enumerate(measures):
-        m = df.loc[df['measure'] == measure]
-
-        world_sizes = m["world_size"].values
-        cpu_times = m["cpu_time"].values
-        real_times = m["real_time"].values
-
-        time_unit = m["time_unit"].values
-        if not all(x==time_unit[0] for x in time_unit):
-            raise ValueError("time unit is not always the same!")
-        time_unit = time_unit[0]
-
-        axs[index].plot(world_sizes, cpu_times, label="CPU")
-        axs[index].plot(world_sizes, real_times, label="Real")
-        axs[index].set_title(measure.capitalize())
-        axs[index].tick_params(axis='x', labelrotation=45)
-        axs[index].set_xlabel("World size^2")
-        axs[index].set_ylabel(time_unit)
-        axs[index].legend()
-        axs[index].grid()
+            ax.bar(world_sizes, duration, label=f"{device} time", color=color[device])
+            ax.set_title(measure.capitalize())
+            
+            ax.tick_params(axis='x', labelrotation=45)
+            ax.set_xlabel("World size^2")
+            ax.set_ylabel(time_unit)
+            ax.set_yscale('log')
+            ax.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
+            ax.legend()
+            ax.grid()
 
     plt.tight_layout()
     plt.show()
 
-plot_measures(args.measures)
+plot_measures(df, args.measures)
